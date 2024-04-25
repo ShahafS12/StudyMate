@@ -7,6 +7,8 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Logout from "./Logout";
 import AuthProvider, {useAuth} from "./security/AuthContext";
+import Register from "./Register";
+import HomePage from "./HomePage";
 
 function AuthenticatedRoute({children}) {
     const authContext = useAuth()
@@ -26,8 +28,10 @@ export default function StudyMate() {
                 <BrowserRouter>
                     <Header />
                     <Routes>
-                        <Route path='/' element={ <Login /> }></Route>
+                        <Route path='/' element={ <HomePage /> }></Route>
                         <Route path='/login' element={ <Login /> }></Route>
+                        <Route path='/register' element={ <Register /> }></Route>
+                        <Route path='/home' element={ <HomePage /> }></Route>
 
                         <Route path='/welcome/:username' element={
                             <AuthenticatedRoute>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(URLMappingConstants.VERSION_PREFIX)
 @RestController
+//@CrossOrigins(origins = "http://localhost:3000", allowCredentials = "true")
 public class WebServicesController {
     private static Logger log = LogManager.getLogger(WebServicesController.class);
 
