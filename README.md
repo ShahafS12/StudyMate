@@ -33,10 +33,6 @@ Make sure you have the following installed:
 
 Once you have installed the dependencies, you can run the StudyMate UI locally with the following command:
 
-bash
-
-Copy code
-
 `npm start`
 
 This command starts the development server and opens the StudyMate app in your default web browser. If it doesn't open automatically, you can access it at [http://localhost:3000](http://localhost:3000).
