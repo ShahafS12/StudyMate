@@ -18,25 +18,13 @@ Make sure you have the following installed:
 
 1.  Clone the StudyMate repository to your local machine:
     
-    bash
-    
-    Copy code
-    
     `git clone https://github.com/your-username/StudyMate.git`
     
 2.  Navigate to the project directory:
     
-    bash
-    
-    Copy code
-    
     `cd StudyMate`
     
 3.  Install dependencies using npm:
-    
-    bash
-    
-    Copy code
     
     `npm install`
     
