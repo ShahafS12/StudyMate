@@ -1,0 +1,10 @@
+.logo {
+    height: 50px;
+    margin-right: 10px;
+    background-color: transparent;
+}
+
+.title{
+    display: flex;
+    align-items: center;
+}

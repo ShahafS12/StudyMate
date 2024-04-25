@@ -1,10 +1,14 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useAuth} from "./security/AuthContext";
 
 export default function Login() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState(false)
+
     const navigate = useNavigate()
+    const authContext = useAuth();
 
     function handleUserNameChange(event) {
         setUsername(event.target.value)
@@ -15,11 +19,10 @@ export default function Login() {
     }
 
     function handleSubmit() {
-        if(username === 'Shahar' && password === 'admin') {
-            alert('Login successful')
+        if(authContext.login(username, password)) {
             navigate(`/welcome/${username}`)
         } else {
-            alert('Login failed')
+            setErrorMessage(true)
         }
     }
 
@@ -27,6 +30,7 @@ export default function Login() {
         <div className="Login">
             <div className="Login-Form">
                 <h1>Login</h1>
+                {errorMessage && <div className="alert alert-danger">Login failed</div>}
                 <div>
                     <label>User name:</label>
                     <input type="text" name="username" value={username} onChange={handleUserNameChange}/>
