@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(URLMappingConstants.VERSION_PREFIX)
 @RestController
 public class WebServicesController {
-    private static Logger log = LogManager.getLogger(WebServicesController.class);
+    private static final Logger log = LogManager.getLogger(WebServicesController.class);
 
     @Autowired
     private WebServices service;
