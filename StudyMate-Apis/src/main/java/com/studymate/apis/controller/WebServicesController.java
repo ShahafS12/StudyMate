@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 //@CrossOrigins(origins = "http://localhost:3000", allowCredentials = "true")
 public class WebServicesController {
-    private static Logger log = LogManager.getLogger(WebServicesController.class);
+    private static final Logger log = LogManager.getLogger(WebServicesController.class);
 
     @Autowired
     private WebServices service;

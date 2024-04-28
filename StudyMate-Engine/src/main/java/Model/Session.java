@@ -11,50 +11,83 @@ import java.time.Instant;
 
 public class Session
 {
-    private static Logger log = LogManager.getLogger(Group.class);
-    private UUID id;
+    private static final Logger log = LogManager.getLogger(Group.class);
+    private final UUID id;
     private Date sessionDate;
-    private Date creationDate;
-    private User createdBy;
+    private final Date creationDate;
+    private final User createdBy;
     private List<User> participants;
     private int maxParticipants;
     private String description;
     private boolean isDeleted;
-    private Group group;
+    private final Group group;
     private final static int UNCAPPED_PARTICIPANTS = -1;
-    //todo should we include location?
+    //todo should we include location? last modified?
     public Session(Date sessionDate,User createdBy, int maxParticipants,String description, Group group) {
+        validateParameters(sessionDate, createdBy, group);
         this.id = UUID.randomUUID();
         this.sessionDate = sessionDate;
         this.creationDate = Date.from(Instant.now());
         this.createdBy = createdBy;
         this.participants = new ArrayList<>();
+        participants.add(createdBy);
         this.maxParticipants = maxParticipants;
         this.description = description;
         this.isDeleted = false;
         this.group = group;
     }
-    public Session(Date sessionDate,User createdBy, int maxParticipants,Group group) {
+    public Session(Date sessionDate,User createdBy,Group group, int maxParticipants) {
+        validateParameters(sessionDate, createdBy, group);
         this.id = UUID.randomUUID();
         this.sessionDate = sessionDate;
         this.creationDate = Date.from(Instant.now());
         this.createdBy = createdBy;
         this.participants = new ArrayList<>();
+        participants.add(createdBy);
         this.maxParticipants = maxParticipants;
         this.description = "";
         this.isDeleted = false;
         this.group = group;
     }
     public Session(Date sessionDate,User createdBy, Group group) {
+        validateParameters(sessionDate, createdBy, group);
         this.id = UUID.randomUUID();
         this.sessionDate = sessionDate;
         this.creationDate = Date.from(Instant.now());
         this.createdBy = createdBy;
         this.participants = new ArrayList<>();
+        participants.add(createdBy);
         this.maxParticipants = UNCAPPED_PARTICIPANTS;
         this.description = "";
         this.isDeleted = false;
         this.group = group;
+    }
+    private void validateParameters(Date sessionDate,User createdBy, Group group) throws IllegalArgumentException{
+        StringBuilder errorMessage = new StringBuilder();
+        if(sessionDate == null || createdBy == null || group == null) {
+            errorMessage.append("The following parameters are required: ");
+            if(sessionDate == null) {
+                errorMessage.append("sessionDate ");
+            }
+            if(createdBy == null) {
+                errorMessage.append("createdBy ");
+            }
+            if(group == null) {
+                errorMessage.append("group ");
+            }
+        }
+        else {
+            if (sessionDate.before(Date.from(Instant.now()))) {
+                errorMessage.append("Session date is in the past\n");
+            }
+            if (!createdBy.isInGroup(group)) {
+                errorMessage.append(String.format("User %s is not in group %s\n", createdBy.getUserName(), group.getName()));
+            }
+        }
+        if(errorMessage.length() > 0) {
+            log.error(errorMessage.toString());
+            throw new IllegalArgumentException(errorMessage.toString());
+        }
     }
     public void setSessionDate(Date sessionDate) {
         this.sessionDate = sessionDate;
@@ -68,7 +101,7 @@ public class Session
     public void addParticipant(User participant) throws IllegalArgumentException {
         if (maxParticipants == UNCAPPED_PARTICIPANTS || participants.size() < maxParticipants) {
             if(participants.contains(participant)){
-                String message = String.format("Participant %s is already in the list", participant.getUserName());
+                String message = String.format("Participant %s is already in session", participant.getUserName());
                 log.error(message);
                 throw new IllegalArgumentException(message);
             }
