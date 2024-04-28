@@ -1,5 +1,6 @@
 package com.studymate.apis.controller;
 
+import com.studymate.apis.Mongo.Services.UserService;
 import com.studymate.apis.constansts.URLMappingConstants;
 import com.studymate.apis.service.WebServices;
 import org.apache.logging.log4j.LogManager;
@@ -16,12 +17,19 @@ public class WebServicesController {
 
     @Autowired
     private WebServices service;
+    @Autowired
+    private UserService userService;
 
     @PostMapping(URLMappingConstants.CREATE_USER)
     @ResponseBody
-    public ResponseEntity<String> CreateUser(@RequestParam("username") String userName, @RequestParam("password") String password) {
+    public ResponseEntity<String> CreateUser(@RequestParam("username") String userName, @RequestParam("password") String password
+    ,@RequestParam("email") String email, @RequestParam("university") String university, @RequestParam("degree")
+                                                 String degree, @RequestParam("type") String type,@RequestParam("gender")  String gender) {
         log.info("Creating user");
-        return service.createUser(userName,password);
+      //  return service.createUser(userName,password);
+        return userService.addUser(userName,password,email,university,degree,type,gender);
     }
+
+
 
 }
