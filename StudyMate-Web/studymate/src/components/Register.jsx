@@ -10,7 +10,7 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [college, setCollege] = useState('');
     const [degree, setDegree] = useState('');
-    const [type, setType] = useState('');
+    const [curriculum, setCurriculum] = useState('');
     const [gender, setGender] = useState('');
 
     const navigate = useNavigate();
@@ -19,17 +19,18 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Perform form validation
-        if (!username || !password || !email || !college || !degree  || !type || !gender) {
+        if (!username || !password || !email || !college || !degree  || !curriculum || !gender) {
             setErrorMessage(true)
             console.log('Please fill in all fields');
             return;
         }
         // Send registration request if all fields are filled
         try {
-             const response = await registerUser(username, password);
+             const response = await registerUser(username, password, email, college, degree, curriculum, gender);
 
             // Handle successful registration
             console.log('Registration successful:', response.data);
+            alert('Registration successful')
             navigate(`/login`);
         } catch (error) {
             // Handle registration error
@@ -77,9 +78,9 @@ export default function Register() {
                                     </select>
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="type" className="form-label">Type</label>
-                                    <input type="text" className="form-control" id="type" value={type}
-                                           onChange={(e) => setType(e.target.value)}/>
+                                    <label htmlFor="type" className="form-label">Curriculum</label>
+                                    <input type="text" className="form-control" id="type" value={curriculum}
+                                           onChange={(e) => setCurriculum(e.target.value)}/>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="gender" className="form-label">Gender</label>
