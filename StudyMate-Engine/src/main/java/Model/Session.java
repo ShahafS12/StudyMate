@@ -16,13 +16,13 @@ public class Session
     private Date sessionDate;
     private final Date creationDate;
     private final User createdBy;
-    private List<User> participants;
+    private List<User> participants;//todo maybe this should be a map with user and role
     private int maxParticipants;
     private String description;
     private boolean isDeleted;
     private final Group group;
     private final static int UNCAPPED_PARTICIPANTS = -1;
-    //todo should we include location? last modified?
+    //todo should we include location? last modified? permissions?
     public Session(Date sessionDate,User createdBy, int maxParticipants,String description, Group group) {
         validateParameters(sessionDate, createdBy, group);
         this.id = UUID.randomUUID();
@@ -80,7 +80,7 @@ public class Session
             if (sessionDate.before(Date.from(Instant.now()))) {
                 errorMessage.append("Session date is in the past\n");
             }
-            if (!createdBy.isInGroup(group)) {
+            if (createdBy.isInGroup(group)) {
                 errorMessage.append(String.format("User %s is not in group %s\n", createdBy.getUserName(), group.getName()));
             }
         }
@@ -105,7 +105,7 @@ public class Session
                 log.error(message);
                 throw new IllegalArgumentException(message);
             }
-            if(!participant.isInGroup(group)){
+            if(participant.isInGroup(group)){
                 String message = String.format("Participant %s is not in the group", participant.getUserName());
                 log.error(message);
                 throw new IllegalArgumentException(message);

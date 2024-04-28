@@ -13,7 +13,7 @@ class SessionTest
     @Test
     public void testCreatingSession()
     {
-        User user = new User("testUser", "password");
+        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup","testInstitute","testCurriculum");
@@ -25,7 +25,7 @@ class SessionTest
     @Test
     public void addExistingUserToSession()
     {
-        User user = new User("testUser", "password");
+        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup","testInstitute","testCurriculum");
@@ -42,8 +42,8 @@ class SessionTest
     @Test
     public void addParticipantToSession()
     {
-        User user = new User("testUser", "password");
-        User user2 = new User("testUser2", "password");
+        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user2 = new User("testUser2", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup", "testInstitute", "testCurriculum");
@@ -56,7 +56,7 @@ class SessionTest
     @Test
     public void createSessionWithInvalidUser()
     {
-        User user = new User("testUser", "password");
+        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup", "testInstitute", "testCurriculum");
@@ -71,7 +71,7 @@ class SessionTest
     @Test
     public void createSessionInPast()
     {
-        User user = new User("testUser", "password");
+        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(2020,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup", "testInstitute", "testCurriculum");
@@ -87,8 +87,8 @@ class SessionTest
     @Test
     public void addParticipantToFullSession()
     {
-        User user = new User("testUser", "password");
-        User user2 = new User("testUser2", "password");
+        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user2 = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup", "testInstitute", "testCurriculum");
