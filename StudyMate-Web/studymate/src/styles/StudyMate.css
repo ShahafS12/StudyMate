@@ -3,11 +3,10 @@ label, input, button {
     padding: 5px;
 }
 
-.footer{
-    position: fixed;
-    left: 0;
-    bottom: 0;
+.footer {
     width: 100%;
     color: white;
     text-align: center;
+    position: relative;
+    margin-top: auto; /* This pushes the footer to the bottom of its containing element */
 }
