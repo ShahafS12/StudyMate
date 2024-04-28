@@ -23,7 +23,7 @@ public class Group
     public void addMember(User user) throws IllegalArgumentException{
         if (!members.contains(user)) {
             members.add(user);
-            if(!user.isInGroup(this))
+            if(user.isInGroup(this))
                 user.addGroup(this);
             log.info(String.format("User %s added to group %s", user.getUserName(), name));
         }

@@ -1,13 +1,17 @@
 package com.studymate.apis.Mongo.Services;
 
-import com.studymate.apis.Mongo.Document.UserDoc;
+import Model.User;
 import com.studymate.apis.Mongo.Repositories.UserRepository;
+import com.studymate.apis.controller.WebServicesController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+    private static final Logger log = LogManager.getLogger(WebServicesController.class);
 
     private final UserRepository userRepository;
 
@@ -16,23 +20,27 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<String> addUser(String username, String password, String email, String university, String degree, String type, String gender) {
-        UserDoc newUser = new UserDoc();
-
+    public ResponseEntity<String> addUser(String username, String password, String email, String university, String degree, String curriculum, String gender) {
+        log.info("Creating user");
+        if(userRepository.findByUserName(username) != null) {
+            String errorMsg = "Username already exists";
+            log.error(errorMsg);
+            return ResponseEntity.badRequest().body(errorMsg);
+        }
+        if(userRepository.findByEmail(email) != null) {
+            String errorMsg = "Email already exists";
+            log.error(errorMsg);
+            return ResponseEntity.badRequest().body(errorMsg);
+        }
         try {
-            newUser.setUsername(username);
-            newUser.setPassword(password);
-            newUser.setEmail(email);
-            newUser.setUniversity(university);
-            newUser.setDegree(degree);
-            newUser.setType(type);
-            newUser.setGender(gender);
-
-            userRepository.save(newUser);
-            return ResponseEntity.status(201).body(String.format("User %s created successfully", username));
+            User user = new User(username, password, email, university, degree, curriculum,gender);
+            userRepository.save(user);
+            log.info("User created successfully");
+            return ResponseEntity.ok("User created successfully");
         }
         catch (IllegalArgumentException e) {
-            return ResponseEntity.status(500).body(String.format("failed to create user %s with error %s", username, e.getMessage()));
+            log.error(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
