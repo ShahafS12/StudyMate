@@ -10,16 +10,6 @@ public class GroupDto {
     private Date createdDate;
     private Map<String, UserDto> usersMap;
 
-    // Constructor to initialize the group with properties and users
-    public GroupDto(String groupName, String university, String curriculum, Date createdDate, Map<String, UserDto> usersMap) {
-        this.groupName = groupName;
-        this.university = university;
-        this.curriculum = curriculum;
-        this.createdDate = createdDate;
-        this.usersMap = new HashMap<>(usersMap);
-    }
-
-    // Getters and setters for group properties
 
     public String getGroupName() {
         return groupName;
@@ -78,8 +68,12 @@ public class GroupDto {
         return usersMap.size();
     }
 
+    public void setUsersMap(Map<String, UserDto> usersMap) {
+        this.usersMap = usersMap;
+    }
     // Method to get all users in the group
     public Map<String, UserDto> getAllUsers() {
         return new HashMap<>(usersMap);
     }
 }
+
