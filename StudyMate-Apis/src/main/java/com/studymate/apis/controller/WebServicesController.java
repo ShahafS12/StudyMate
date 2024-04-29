@@ -28,6 +28,15 @@ public class WebServicesController {
     }
 
 
+    @PostMapping(URLMappingConstants.CREATE_GROUP)
+    @ResponseBody
+    public ResponseEntity<String> CreateGroup(@RequestBody UserDto userDto) {
+        log.info("Creating new group");
+      //  return service.createUser(userName,password);
+        return userService.addUser(userDto.getUsername(), userDto.getPassword(), userDto.getEmail(), userDto.getUniversity(), userDto.getDegree(),
+                userDto.getCurriculum(), userDto.getGender());
+    }
+
 
 
 }
