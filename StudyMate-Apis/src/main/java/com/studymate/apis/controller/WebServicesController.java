@@ -1,6 +1,8 @@
 package com.studymate.apis.controller;
 
+import com.studymate.apis.Mongo.Dtos.GroupDto;
 import com.studymate.apis.Mongo.Dtos.UserDto;
+import com.studymate.apis.Mongo.Services.GroupService;
 import com.studymate.apis.Mongo.Services.UserService;
 import com.studymate.apis.constansts.URLMappingConstants;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +19,7 @@ public class WebServicesController {
 
     @Autowired
     private UserService userService;
+    private GroupService groupService;
 
     @PostMapping(URLMappingConstants.CREATE_USER)
     @ResponseBody
@@ -30,11 +33,12 @@ public class WebServicesController {
 
     @PostMapping(URLMappingConstants.CREATE_GROUP)
     @ResponseBody
-    public ResponseEntity<String> CreateGroup(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> CreateGroup(@RequestBody GroupDto groupDto) {
         log.info("Creating new group");
       //  return service.createUser(userName,password);
-        return userService.addUser(userDto.getUsername(), userDto.getPassword(), userDto.getEmail(), userDto.getUniversity(), userDto.getDegree(),
-                userDto.getCurriculum(), userDto.getGender());
+        return groupService.createGroup(groupDto.getGroupName(),groupDto.getUniversity(),
+                groupDto.getCurriculum(),groupDto.getAllUsers());
+
     }
 
 
