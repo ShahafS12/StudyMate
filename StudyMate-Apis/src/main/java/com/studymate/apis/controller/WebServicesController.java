@@ -22,9 +22,15 @@ public class WebServicesController {
     @ResponseBody
     public ResponseEntity<String> CreateUser(@RequestBody UserDto userDto) {
         log.info("Creating user");
-      //  return service.createUser(userName,password);
         return userService.addUser(userDto.getUsername(), userDto.getPassword(), userDto.getEmail(), userDto.getUniversity(), userDto.getDegree(),
                 userDto.getCurriculum(), userDto.getGender());
+    }
+
+    @GetMapping(URLMappingConstants.LOGIN)
+    @ResponseBody
+    public ResponseEntity<String> Login(@RequestBody UserDto userDto) {
+        log.info("Logging in user");
+        return userService.loginUser(userDto.getUsername(), userDto.getPassword());
     }
 
 
