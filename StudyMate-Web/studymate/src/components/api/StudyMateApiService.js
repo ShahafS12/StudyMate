@@ -8,13 +8,28 @@ const apiClient= axios.create(
     }
 )
 
-export const registerUser = async (username, password, email, university, degree,type, gender) => {
+export const registerUser = async (username, password, email, university, degree, curriculum, gender) => {
     try {
-        const response = await apiClient.post(`/users/create?username=${username}&password=${password}&email=${email}&university=${university}
-        &degree=${degree}&type=${type}&gender=${gender}`);
+        const userData = { username, password, email, university, degree, curriculum, gender };
+        const response = await apiClient.post(`/users/createUser`, JSON.stringify(userData),
+            {headers: { 'Content-Type': 'application/json' }
+        });
         return response.data;
     } catch (error) {
         console.error('Registration error:', error);
+        throw error;
+    }
+}
+
+export const loginUser = async (username, password) => {
+    try {
+        const userData = { username, password };
+        const response = await apiClient.post(`/users/login`, JSON.stringify(userData),
+            {headers: { 'Content-Type': 'application/json' }
+            });
+        return response.data;
+    } catch (error) {
+        console.error('Login error:', error);
         throw error;
     }
 }
