@@ -26,7 +26,7 @@ public class WebServicesController {
                 userDto.getCurriculum(), userDto.getGender());
     }
 
-    @GetMapping(URLMappingConstants.LOGIN)
+    @PostMapping(URLMappingConstants.LOGIN)
     @ResponseBody
     public ResponseEntity<String> Login(@RequestBody UserDto userDto) {
         log.info("Logging in user");
