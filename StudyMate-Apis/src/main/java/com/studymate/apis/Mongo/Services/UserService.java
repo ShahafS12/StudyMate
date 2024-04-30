@@ -7,13 +7,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import io.jsonwebtoken.Jwts;
 
 @Service
 public class UserService {
     private static final Logger log = LogManager.getLogger(WebServicesController.class);
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -33,7 +36,8 @@ public class UserService {
             return ResponseEntity.badRequest().body(errorMsg);
         }
         try {
-            User user = new User(username, password, email, university, degree, curriculum,gender);
+            String encodedPassword = passwordEncoder.encode(password);
+            User user = new User(username, encodedPassword, email, university, degree, curriculum,gender);
             userRepository.save(user);
             log.info("User created successfully");
             return ResponseEntity.ok("User created successfully");
@@ -41,6 +45,26 @@ public class UserService {
         catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    public ResponseEntity<String> loginUser(String username, String password) {
+        log.info("Logging in user");
+        User user = userRepository.findByUserName(username);
+        if(user == null) {
+            String errorMsg = "User not found";
+            log.error(errorMsg);
+            return ResponseEntity.badRequest().body(errorMsg);
+        }
+        if(passwordEncoder.matches(password, user.getEncryptedPassword())) {
+            String token = Jwts.builder().subject(username).claim("roles", "user").compact();
+            log.info("User logged in successfully");
+            return ResponseEntity.ok(token);
+        }
+        else {
+            String errorMsg = "Incorrect password";
+            log.error(errorMsg);
+            return ResponseEntity.badRequest().body(errorMsg);
         }
     }
 }
