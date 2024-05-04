@@ -9,9 +9,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Document(collection = "users")
 public class User
@@ -89,10 +87,10 @@ public class User
             groups.add(group);
             if(!group.isMember(this))
                 group.addMember(this);
-            log.info(String.format("User %s added to group %s", userName, group.getName()));
+            log.info(String.format("User %s added to group %s", userName, group.getGroupName()));
         }
         else {
-            String message = String.format("User %s already in group %s", userName, group.getName());
+            String message = String.format("User %s already in group %s", userName, group.getGroupName());
             log.error(message);
             throw new IllegalArgumentException(message);
         }

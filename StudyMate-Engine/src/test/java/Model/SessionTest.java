@@ -16,7 +16,9 @@ class SessionTest
         User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
-        Group group = new Group("testGroup","testInstitute","testCurriculum");
+        Date groupCreatedDate = new Date();
+        groupCreatedDate.setYear(2021);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
         user.addGroup(group);
         Session session = new Session(sessionDate,user,group);
         assertEquals(session.getCreatedBy(), user);
@@ -28,7 +30,9 @@ class SessionTest
         User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
-        Group group = new Group("testGroup","testInstitute","testCurriculum");
+        Date groupCreatedDate = new Date();
+        groupCreatedDate.setYear(2021);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
         group.addMember(user);
         Session session = new Session(sessionDate,user,group);
         try {
@@ -46,7 +50,9 @@ class SessionTest
         User user2 = new User("testUser2", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
-        Group group = new Group("testGroup", "testInstitute", "testCurriculum");
+        Date groupCreatedDate = new Date();
+        groupCreatedDate.setYear(2021);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
         group.addMember(user);
         group.addMember(user2);
         Session session = new Session(sessionDate, user, group);
@@ -59,7 +65,11 @@ class SessionTest
         User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
-        Group group = new Group("testGroup", "testInstitute", "testCurriculum");
+        Date groupCreatedDate = new Date();
+        groupCreatedDate.setYear(2021);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
+        group.addMember(user);
+
         try {
             Session session = new Session(sessionDate, user, group);
             fail("Expected IllegalArgumentException");
@@ -74,7 +84,9 @@ class SessionTest
         User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(2020,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
-        Group group = new Group("testGroup", "testInstitute", "testCurriculum");
+        Date groupCreatedDate = new Date();
+        groupCreatedDate.setYear(2021);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
         group.addMember(user);
         try {
             Session session = new Session(sessionDate, user, group);
@@ -87,11 +99,13 @@ class SessionTest
     @Test
     public void addParticipantToFullSession()
     {
-        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
-        User user2 = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user2 = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
-        Group group = new Group("testGroup", "testInstitute", "testCurriculum");
+        Date groupCreatedDate = new Date();
+        groupCreatedDate.setYear(2021);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
         group.addMember(user);
         group.addMember(user2);
         Session session = new Session(sessionDate, user, group,1);

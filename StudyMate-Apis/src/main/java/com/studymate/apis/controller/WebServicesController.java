@@ -19,6 +19,7 @@ public class WebServicesController {
 
     @Autowired
     private UserService userService;
+    @Autowired
     private GroupService groupService;
 
     @PostMapping(URLMappingConstants.CREATE_USER)
@@ -35,9 +36,8 @@ public class WebServicesController {
     @ResponseBody
     public ResponseEntity<String> CreateGroup(@RequestBody GroupDto groupDto) {
         log.info("Creating new group");
-      //  return service.createUser(userName,password);
         return groupService.createGroup(groupDto.getGroupName(),groupDto.getUniversity(),
-                groupDto.getCurriculum(),groupDto.getAllUsers());
+                groupDto.getCurriculum(),groupDto.getGroupAdmin(),groupDto.getMembers());
 
     }
 
