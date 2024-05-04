@@ -18,8 +18,10 @@ export default function Login() {
         setPassword(event.target.value);
     }
 
-    function handleSubmit() {
-        if (authContext.login(username, password)) {
+    async function handleSubmit() {
+        const loginSuccessful = await authContext.login(username, password);
+        console.log('Login successful:', loginSuccessful);
+        if (loginSuccessful) {
             navigate(`/welcome/${username}`);
         } else {
             setErrorMessage(true);

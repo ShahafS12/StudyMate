@@ -79,6 +79,9 @@ public class User
     public String getUserName() {
         return userName;
     }
+    public String getEncryptedPassword() {
+        return password;
+    }
     public boolean isInGroup(Group group) {
         return groups.contains(group);
     }
