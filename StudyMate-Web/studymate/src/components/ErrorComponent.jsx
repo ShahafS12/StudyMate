@@ -1,11 +1,12 @@
+import React from 'react';
+import myImage from '../images/404photo.jpg';
+import '../styles/ErrorComponent.css';
+
+
 export default function ErrorComponent() {
     return (
         <div className="ErrorComponent">
-            <h1>404</h1>
-            <h1>We are working really hard!</h1>
-            <div>
-                Apologies for the 404 error. We are working really hard to get this page up and running.
-            </div>
+            <img src={myImage} className='img' alt="404Image" />
         </div>
     );
 }
