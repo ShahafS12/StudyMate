@@ -30,7 +30,7 @@ public class WebServicesController {
                 userDto.getCurriculum(), userDto.getGender());
     }
 
-    @PostMapping(URLMappingConstants.LOGIN)
+    @PostMapping(URLMappingConstants.CREATE_GROUP)
     @ResponseBody
 
     public ResponseEntity<String> CreateGroup(@RequestBody GroupDto groupDto) {
@@ -38,7 +38,8 @@ public class WebServicesController {
         return groupService.createGroup(groupDto.getGroupName(), groupDto.getUniversity(),
                 groupDto.getCurriculum(), groupDto.getGroupAdmin(), groupDto.getMembers());
     }
-
+        @PostMapping(URLMappingConstants.LOGIN)
+        @ResponseBody
         public ResponseEntity<String> Login (@RequestBody UserDto userDto){
             log.info("Logging in user");
             return userService.loginUser(userDto.getUsername(), userDto.getPassword());

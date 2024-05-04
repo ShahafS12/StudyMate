@@ -19,15 +19,15 @@ public class Group {
 
     public static final int MAX_Name_Size = 120;
 
-    public Group(String name, String institute, String curriculum,Date createdDate, User groupAdmin , List<User> members ) {
-        if (validateParameters(name, institute, curriculum))
+    public Group(String groupName, String institute, String curriculum,Date createdDate, User groupAdmin , List<User> members ) {
+        if (validateParameters(groupName, institute, curriculum))
         {
-        this.groupName = name;
+        this.groupName = groupName;
         this.institute = institute;
         this.curriculum = curriculum;
         this.createdDate=createdDate;
-        this.members = new ArrayList<>();
-        addMembers(members);
+        this.groupAdmin=groupAdmin;
+        this.members = new ArrayList<>(members);
         this.sessions = new ArrayList<>();
         }
     }
@@ -102,14 +102,7 @@ public class Group {
        // NEED to think if we want to have a list of Curriculum
         return valid;
     }
-    public boolean checkcreatedDateViolation(Date createdDate, StringBuilder errorMessage){
-        boolean valid = true;
-        Date currentDate = new Date();
-       if (createdDate.after(currentDate)) {
-           valid = false;
-       }
-       return valid;
-    }
+
     public void addSession(Session session) {
         sessions.add(session);
     }

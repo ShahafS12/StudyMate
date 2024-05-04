@@ -23,16 +23,16 @@ public class GroupService {
     private final UserRepository userRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserService userService, UserRepository userRepository) {
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
     }
 
 
-     public ResponseEntity<String> createGroup(String groupName, String university, String curriculum, String groupAdminStr ,List<String> membersStr) {
+    public ResponseEntity<String> createGroup(String groupName, String university, String curriculum, String groupAdminStr ,List<String> membersStr) {
     log.info("Creating group");
 
-    if(groupRepository.findByGroupName(groupName)!= null) {
+    if(groupRepository.findByGroupName(groupName) !=null) {
         String errorMsg = "Group name already exists";
         log.error(errorMsg);
         return ResponseEntity.badRequest().body(errorMsg);
@@ -41,7 +41,7 @@ public class GroupService {
     try {
         // Additional checks can be added here if needed
         User groupAdmin=userRepository.findByUserName(groupAdminStr);
-        List<User> members= userRepository.findMembersByUserName(membersStr);
+        List<User> members= userRepository.findMembersByUserNames(membersStr);
         Date createdDate=new Date();
         Group group = new Group(groupName,university,curriculum,createdDate,groupAdmin, members);
         groupRepository.save(group);
