@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: studymate-frontend
+  labels:
+    application/name: studymate
+    application/component: frontend
+spec:
+  selector:
+    matchLabels:
+      application/name: studymate
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        application/name: studymate
+        application/component: frontend
+    spec:
+
+#      imagePullSecrets:
+#        - name: ghcr-login-secret
+
+      containers:
+        - name: studymate
+          image: shaharshwartz/studymate:1.0
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
+
+          env:
+
+            - name: KVS_SERVICE
+              value: "studymate-kvs"
+
+            - name: COUNTER
+              value: "VISITS"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: studymate-frontend
+  labels:
+    application/name: studymate
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: studymate
+    # resolves to studymate.<azure-region-name>.cloudapp.azure.com
+    # azure-region-name for israel == israelcentral
+    # so it resolves to:
+    # studymate.israelcentral.cloudapp.azure.com
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    application/component: frontend

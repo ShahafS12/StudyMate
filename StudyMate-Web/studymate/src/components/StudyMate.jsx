@@ -1,7 +1,7 @@
 import '../styles/StudyMate.css';
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Login from "./Login";
-import WelcomeComponent from "./WelcomeComponent";
+import ProfileComponent from "./ProfileComponent";
 import ErrorComponent from "./ErrorComponent";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -33,9 +33,9 @@ export default function StudyMate() {
                         <Route path='/register' element={ <Register /> }></Route>
                         <Route path='/home' element={ <HomePage /> }></Route>
 
-                        <Route path='/welcome/:username' element={
+                        <Route path='/profile/:username' element={
                             <AuthenticatedRoute>
-                                <WelcomeComponent />
+                                <ProfileComponent />
                             </AuthenticatedRoute>}>
                         </Route>
                         <Route path='/logout' element={

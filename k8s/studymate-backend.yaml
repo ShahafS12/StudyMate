@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: studymate-backend
+  labels:
+    application/name: studymate
+    application/component: backend
+spec:
+  selector:
+    matchLabels:
+      application/name: studymate
+      application/component: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        application/name: studymate
+        application/component: backend
+    spec:
+      containers:
+        - name: studymate
+          image: redis
+
+          ports:
+            - containerPort: 6379
+
+          volumeMounts:
+            - name: persistent-storage
+              mountPath: /data
+
+      volumes:
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: studymate-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: studymate-backend
+  labels:
+    application/name: studymate
+    application/component: backend
+spec:
+
+  ports:
+    - port: 6379
+  selector:
+    application/component: backend

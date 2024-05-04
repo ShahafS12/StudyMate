@@ -22,7 +22,7 @@ export default function Login() {
         const loginSuccessful = await authContext.login(username, password);
         console.log('Login successful:', loginSuccessful);
         if (loginSuccessful) {
-            navigate(`/welcome/${username}`);
+            navigate(`/profile/${username}`);
         } else {
             setErrorMessage(true);
         }
