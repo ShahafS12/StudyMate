@@ -1,26 +1,36 @@
 package com.studymate.apis.Mongo.Dtos;
+import Model.User;
+
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class GroupDto {
     private String groupName;
     private String university;
     private String curriculum;
+    private String groupAdmin;
     private Date createdDate;
-    private Map<String, UserDto> usersMap;
+    private List<String> members;
 
-    // Constructor to initialize the group with properties and users
-    public GroupDto(String groupName, String university, String curriculum, Date createdDate, Map<String, UserDto> usersMap) {
-        this.groupName = groupName;
-        this.university = university;
-        this.curriculum = curriculum;
-        this.createdDate = createdDate;
-        this.usersMap = new HashMap<>(usersMap);
+    public void setMembers(List<String> members) {
+        this.members = members;
     }
-
-    // Getters and setters for group properties
-
+    public List<String> getMembers() {
+        return this.members ;
+    }
+    public void setGroupAdmin(String groupAdmin) {
+        this.groupAdmin = groupAdmin;
+    }
+    public void setGroup(String groupName, String university, String curriculum, Date CreatedDate , List<String> allUsers){
+    setGroupName(groupName);
+    setUniversity(university);
+    setCurriculum(curriculum);
+    setCreatedDate(CreatedDate);
+    setMembers(allUsers);
+}
+    public String getGroupAdmin() {
+        return groupAdmin;
+    }
     public String getGroupName() {
         return groupName;
     }
@@ -53,33 +63,19 @@ public class GroupDto {
         this.createdDate = createdDate;
     }
 
-    // Method to add a user to the group
-    public void addUser(String key, UserDto user) {
-        usersMap.put(key, user);
+    public void addUser(String userName) {
+        members.add(userName);
+    }
+    public void removeUserFromGroup(User userName) {
+        members.remove(userName);
     }
 
-    // Method to get a user by username
-    public UserDto getUser(String key) {
-        return usersMap.get(key);
+    public boolean containsUser(User userName) {
+        return members.contains(userName);
+    }
+    public int getMembersCount() {
+        return members.size();
     }
 
-    // Method to remove a user from the group
-    public void removeUser(String key) {
-        usersMap.remove(key);
-    }
-
-    // Method to check if a user exists in the group
-    public boolean containsUser(String key) {
-        return usersMap.containsKey(key);
-    }
-
-    // Method to get the number of users in the group
-    public int getUserCount() {
-        return usersMap.size();
-    }
-
-    // Method to get all users in the group
-    public Map<String, UserDto> getAllUsers() {
-        return new HashMap<>(usersMap);
-    }
 }
+

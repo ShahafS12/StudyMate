@@ -37,15 +37,15 @@ export default function Login() {
                         <div className="card-body">
                             {errorMessage && <div className="alert alert-danger">Login failed</div>}
                             <div className="mb-3">
-                                <label htmlFor="username" className="form-label">User name:</label>
-                                <input type="text" className="form-control" id="username" name="username" value={username} onChange={handleUserNameChange} />
+                                <label htmlFor="username" className="form-label">User groupName:</label>
+                                <input type="text" className="form-control" id="username" groupName="username" value={username} onChange={handleUserNameChange} />
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="password" className="form-label">Password:</label>
-                                <input type="password" className="form-control" id="password" name="password" value={password} onChange={handlePasswordChange} />
+                                <input type="password" className="form-control" id="password" groupName="password" value={password} onChange={handlePasswordChange} />
                             </div>
                             <div>
-                                <button type="button" className="btn btn-primary" name="login" onClick={handleSubmit}>Login</button>
+                                <button type="button" className="btn btn-primary" groupName="login" onClick={handleSubmit}>Login</button>
                             </div>
                         </div>
                     </div>

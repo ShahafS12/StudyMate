@@ -81,7 +81,7 @@ public class Session
                 errorMessage.append("Session date is in the past\n");
             }
             if (createdBy.isInGroup(group)) {
-                errorMessage.append(String.format("User %s is not in group %s\n", createdBy.getUserName(), group.getName()));
+                errorMessage.append(String.format("User %s is not in group %s\n", createdBy.getUserName(), group.getGroupName()));
             }
         }
         if(errorMessage.length() > 0) {
