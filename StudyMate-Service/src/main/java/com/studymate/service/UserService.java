@@ -1,4 +1,4 @@
-package com.studymate.apis.Mongo.Services;
+package com.studymate.service;
 
 import Model.User;
 import com.studymate.apis.Mongo.Repositories.UserRepository;

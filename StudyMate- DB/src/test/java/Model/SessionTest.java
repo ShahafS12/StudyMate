@@ -1,9 +1,11 @@
 package Model;
 
+import com.studymate.model.Group;
+import com.studymate.model.Session;
+import com.studymate.model.User;
 import org.junit.jupiter.api.Test;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,13 +15,12 @@ class SessionTest
     @Test
     public void testCreatingSession()
     {
-        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
-        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
-        user.addGroup(group);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate , user,Collections.emptyList());
         Session session = new Session(sessionDate,user,group);
         assertEquals(session.getCreatedBy(), user);
         assertEquals(session.getSessionDate(), sessionDate);
@@ -27,12 +28,12 @@ class SessionTest
     @Test
     public void addExistingUserToSession()
     {
-        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
-        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
         group.addMember(user);
         Session session = new Session(sessionDate,user,group);
         try {
@@ -46,13 +47,13 @@ class SessionTest
     @Test
     public void addParticipantToSession()
     {
-        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
-        User user2 = new User("testUser2", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user2 = new User("testUser2", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
-        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
         group.addMember(user);
         group.addMember(user2);
         Session session = new Session(sessionDate, user, group);
@@ -62,12 +63,12 @@ class SessionTest
     @Test
     public void createSessionWithInvalidUser()
     {
-        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
-        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
         group.addMember(user);
 
         try {
@@ -81,12 +82,12 @@ class SessionTest
     @Test
     public void createSessionInPast()
     {
-        User user = new User("testUser", "password", "testEmail", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(2020,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
-        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
         group.addMember(user);
         try {
             Session session = new Session(sessionDate, user, group);
@@ -99,13 +100,14 @@ class SessionTest
     @Test
     public void addParticipantToFullSession()
     {
-        User user = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
-        User user2 = new User("testUser", "password", "testEmail@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user = new User("testUser", "password", "testEmail@gmail.com@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
+        User user2 = new User("testUser2", "password", "testEmail@gmail.com@gmail.com", "testUniversity", "testDegree", "testCurriculum", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
-        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, null);
+        Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
+
         group.addMember(user);
         group.addMember(user2);
         Session session = new Session(sessionDate, user, group,1);

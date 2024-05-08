@@ -1,4 +1,4 @@
-package com.studymate.apis.Mongo.Configurations;
+package com.studymate.configurations;
 
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;

@@ -1,8 +1,6 @@
-package com.studymate.apis.Mongo.Repositories;
+package com.studymate.repositories;
 
-import Model.Group;
-import com.studymate.apis.Mongo.Services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.studymate.model.Group;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

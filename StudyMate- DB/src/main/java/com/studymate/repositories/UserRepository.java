@@ -1,6 +1,6 @@
-package com.studymate.apis.Mongo.Repositories;
+package com.studymate.repositories;
 
-import Model.User;
+import com.studymate.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

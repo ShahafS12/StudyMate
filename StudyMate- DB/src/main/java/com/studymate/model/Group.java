@@ -1,5 +1,4 @@
-package Model;
-import java.sql.Time;
+package com.studymate.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

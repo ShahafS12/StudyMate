@@ -1,4 +1,4 @@
-package Model;
+package com.studymate.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,7 +80,7 @@ public class Session
             if (sessionDate.before(Date.from(Instant.now()))) {
                 errorMessage.append("Session date is in the past\n");
             }
-            if (createdBy.isInGroup(group)) {
+            if (!createdBy.isInGroup(group)) {
                 errorMessage.append(String.format("User %s is not in group %s\n", createdBy.getUserName(), group.getGroupName()));
             }
         }

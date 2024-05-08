@@ -1,4 +1,4 @@
-package Model;
+package com.studymate.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.annotation.Id;

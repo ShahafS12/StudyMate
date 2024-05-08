@@ -1,5 +1,5 @@
 package com.studymate.apis.Mongo.Dtos;
-import Model.User;
+import com.studymate.model.User;
 
 import java.util.Date;
 import java.util.List;
