@@ -1,8 +1,7 @@
 package com.studymate.service;
 
-import Model.User;
-import com.studymate.apis.Mongo.Repositories.UserRepository;
-import com.studymate.apis.controller.WebServicesController;
+import com.studymate.repositories.UserRepository;
+import com.studymate.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import io.jsonwebtoken.Jwts;
 
 @Service
 public class UserService {
-    private static final Logger log = LogManager.getLogger(WebServicesController.class);
+    private static final Logger log = LogManager.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

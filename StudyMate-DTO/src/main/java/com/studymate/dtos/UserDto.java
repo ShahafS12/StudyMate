@@ -1,4 +1,4 @@
-package com.studymate.apis.Mongo.Dtos;
+package com.studymate.dtos;
 
 public class UserDto {
     private String username;

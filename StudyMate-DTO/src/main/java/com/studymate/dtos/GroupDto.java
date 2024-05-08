@@ -1,4 +1,4 @@
-package com.studymate.apis.Mongo.Dtos;
+package com.studymate.dtos;
 import com.studymate.model.User;
 
 import java.util.Date;

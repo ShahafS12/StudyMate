@@ -12,6 +12,7 @@
         <module>StudyMate- DB</module>
         <module>StudyMate-Apis</module>
         <module>StudyMate-Service</module>
+        <module>StudyMate-DTO</module>
     </modules>
 
     <properties>
