@@ -1,5 +1,4 @@
 package com.studymate.dtos;
-import com.studymate.model.User;
 
 import java.util.Date;
 import java.util.List;
@@ -66,11 +65,11 @@ public class GroupDto {
     public void addUser(String userName) {
         members.add(userName);
     }
-    public void removeUserFromGroup(User userName) {
+    public void removeUserFromGroup(String userName) {
         members.remove(userName);
     }
 
-    public boolean containsUser(User userName) {
+    public boolean containsUser(String userName) {
         return members.contains(userName);
     }
     public int getMembersCount() {

@@ -1,12 +1,10 @@
 package com.studymate.service;
 
-import Model.Group;
-import Model.User;
-import com.studymate.apis.Mongo.Dtos.UserDto;
-import com.studymate.apis.Mongo.Repositories.GroupRepository;
-import com.studymate.apis.Mongo.Dtos.GroupDto;
-import com.studymate.apis.Mongo.Repositories.UserRepository;
-import com.studymate.apis.controller.WebServicesController;
+
+import com.studymate.model.Group;
+import com.studymate.model.User;
+import com.studymate.repositories.GroupRepository;
+import com.studymate.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import java.util.Map;
 
 @Service
 public class GroupService {
-    private static final Logger log = LogManager.getLogger(WebServicesController.class);
+    private static final Logger log = LogManager.getLogger(GroupService.class);
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
 
