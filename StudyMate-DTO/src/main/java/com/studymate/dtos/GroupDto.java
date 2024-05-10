@@ -5,11 +5,19 @@ import java.util.List;
 
 public class GroupDto {
     private String groupName;
-    private String university;
+    private String institute;
     private String curriculum;
     private String groupAdmin;
     private Date createdDate;
     private List<String> members;
+
+    public GroupDto(String groupName, String institute, String curriculum, String groupAdmin, List<String> members) {
+        this.groupName = groupName;
+        this.institute = institute;
+        this.curriculum = curriculum;
+        this.groupAdmin = groupAdmin;
+        this.members = members;
+    }
 
     public void setMembers(List<String> members) {
         this.members = members;
@@ -22,7 +30,7 @@ public class GroupDto {
     }
     public void setGroup(String groupName, String university, String curriculum, Date CreatedDate , List<String> allUsers){
     setGroupName(groupName);
-    setUniversity(university);
+    setInstitute(university);
     setCurriculum(curriculum);
     setCreatedDate(CreatedDate);
     setMembers(allUsers);
@@ -38,12 +46,12 @@ public class GroupDto {
         this.groupName = groupName;
     }
 
-    public String getUniversity() {
-        return university;
+    public String getInstitute() {
+        return institute;
     }
 
-    public void setUniversity(String university) {
-        this.university = university;
+    public void setInstitute(String institute) {
+        this.institute = institute;
     }
 
     public String getCurriculum() {

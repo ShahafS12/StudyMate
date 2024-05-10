@@ -112,6 +112,35 @@ public class User
         }
     }
 
+    //create getters
+    public String getEmail() {
+        return email;
+    }
+    public String getUniversity() {
+        return university;
+    }
+    public String getDegree() {
+        return degree;
+    }
+    public String getCurriculum() {
+        return curriculum;
+    }
+    public String getMemberSince() {
+        return memberSince;
+    }
+    public List<String> getNotifications() {
+        return notifications;
+    }
+    public List<Session> getSessions() {
+        return sessions;
+    }
+    public List<Group> getGroups() {
+        return groups;
+    }
+    public String getGender() {
+        return gender;
+    }
+
 
 
 }

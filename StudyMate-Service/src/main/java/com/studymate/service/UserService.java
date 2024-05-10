@@ -1,14 +1,21 @@
 package com.studymate.service;
 
+import com.studymate.dtos.GroupDto;
+import com.studymate.dtos.UserDto;
+import com.studymate.model.Group;
 import com.studymate.repositories.UserRepository;
 import com.studymate.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Jwts;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -65,5 +72,61 @@ public class UserService {
             log.error(errorMsg);
             return ResponseEntity.badRequest().body(errorMsg);
         }
+    }
+
+    public ResponseEntity<List<String>> getAllUserNames()
+    {
+        log.info("Getting all users");
+        try {
+            List<String> userNames = userRepository.findAllUserNames();
+            log.info("All users retrieved successfully");
+            return ResponseEntity.ok(userNames);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<UserDto> getUser(String username) {
+        log.info("Getting user");
+        User user = userRepository.findByUserName(username);
+        if(user == null) {
+            log.error(String.format("User %s not found", username));
+            return ResponseEntity.badRequest().body(null);
+        }
+        UserDto userDto = new UserDto(user.getUserName(), user.getEncryptedPassword(), user.getEmail(),
+                user.getUniversity(), user.getDegree(), user.getCurriculum(), user.getGender(),user.getMemberSince());
+        log.info("User retrieved successfully");
+        return ResponseEntity.ok(userDto);
+    }
+
+    public ResponseEntity<List<GroupDto>> getUserGroups(String username) {
+        log.info("Getting user groups");
+        User user = userRepository.findByUserName(username);
+        if(user == null) {
+            log.error(String.format("User %s not found", username));
+            return ResponseEntity.badRequest().body(null);
+        }
+        List<Group> groups = user.getGroups();
+        List<GroupDto> groupDtos = new ArrayList<>();
+        for(Group group : groups) {
+            groupDtos.add(new GroupDto(group.getGroupName(), group.getInstitute(), group.getCurriculum(),
+                    group.getGroupAdmin().getUserName(), group.getMembersNames()));
+        }
+        log.info("User groups retrieved successfully");
+        return ResponseEntity.ok(groupDtos);
+    }
+
+    public ResponseEntity<List<String>> getUserNotifications(String username) {
+        log.info("Getting user notifications");
+        User user = userRepository.findByUserName(username);
+        if(user == null) {
+            log.error(String.format("User %s not found", username));
+            return ResponseEntity.badRequest().body(null);
+        }
+        List<String> notifications = user.getNotifications();
+        log.info("User notifications retrieved successfully");
+        return ResponseEntity.ok(notifications);
     }
 }

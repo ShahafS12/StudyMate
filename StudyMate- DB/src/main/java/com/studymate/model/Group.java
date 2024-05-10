@@ -118,4 +118,32 @@ public class Group {
     public boolean isMember(User user) {
         return members.contains(user);
     }
+
+    //create getters
+    public String getInstitute() {
+        return institute;
+    }
+    public String getCurriculum() {
+        return curriculum;
+    }
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+    public User getGroupAdmin() {
+        return groupAdmin;
+    }
+    public List<User> getMembers() {
+        return members;
+    }
+    public List<Session> getSessions() {
+        return sessions;
+    }
+    public List<String> getMembersNames() {
+        List<String> membersNames = new ArrayList<>();
+        for (User member : members) {
+            membersNames.add(member.getUserName());
+        }
+        return membersNames;
+    }
+
 }
