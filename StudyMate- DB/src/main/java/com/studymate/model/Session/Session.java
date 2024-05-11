@@ -13,7 +13,7 @@ import java.time.Instant;
 
 public class Session
 {
-    private static final Logger log = LogManager.getLogger(Group.class);
+    private static final Logger log = LogManager.getLogger(Session.class);
     private final UUID id;
     private Date sessionDate;
     private final boolean virtualSession=false;
@@ -143,23 +143,60 @@ public class Session
                 ,managerCandidate.getUserName(),participant.getUserName(),id.toString()));
         removeParticipant(participant);
     }
+     public void adminSetParticipantAsAdmin(User admin, User participant) throws IllegalArgumentException {
+        log.info(String.format("Participant %s trying to set participant %s as admin of session %s"
+               ,admin.getUserName() ,participant.getUserName(),id.toString()));
+        givePermissionsToAdmin(admin);
+        setParticipantAsAdmin(participant);
+    }
+    public void setParticipantAsAdmin(User participant) throws IllegalArgumentException {
+        if (!participants.contains(participant))
+        {
+              String message = String.format("Participant %s is not part of the session %s", participant.getUserName(),id.toString());
+                log.error(message);
+                throw new IllegalArgumentException(message);
+        }
+        sessionAdmins.add(participant);
+        log.info(String.format("Participant %s is now admin of session %s"
+                ,participant.getUserName(),id.toString()));
+    }
     public void removeParticipant(User participant)throws IllegalArgumentException {
+        boolean admin = sessionAdmins.contains(participant);
         if (! participants.contains(participant))
         {
             String message = String.format("Participant %s is not in an part of the session %s", participant.getUserName(),id.toString());
                 log.error(message);
                 throw new IllegalArgumentException(message);
         }
+        if (admin)
+        {
+            removeParticipantFromBeingAdmin(participant);
+        }
         participants.remove(participant);
         log.info(String.format("Participant %s removed in session %s "
                 ,participant.getUserName(),id.toString()));
-
+        if (admin && participants.size()>0)
+        {
+            setParticipantAsAdmin(participants.get(0)); // put random participant as admin
+        }
         if (participants.size()==0)
         {
             log.info(String.format("Participants size is 0 deleting session %s", id.toString()));
             cancelMeeting();
         }
     }
+    public void removeParticipantFromBeingAdmin(User admin)throws IllegalArgumentException {
+        if (! sessionAdmins.contains(admin))
+        {
+            String message = String.format("Participant %s is not admin of the session %s", admin.getUserName(),id.toString());
+                log.error(message);
+                throw new IllegalArgumentException(message);
+        }
+        sessionAdmins.remove(admin);
+        log.info(String.format("Participant %s removed from being admin in session %s "
+                ,admin.getUserName(),id.toString()));
+    }
+
     public void cancelMeeting() {
         isCanceled = true;
          log.info(String.format("Canceling session %s",id.toString()));
