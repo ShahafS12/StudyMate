@@ -11,4 +11,9 @@ public class URLMappingConstants
     public static final String GET_USER_NOTIFICATIONS = "/getUserNotifications/{username}";
     public static final String GET_USER_GROUPS = "/getUserGroups/{username}";
     public static final String GET_USER_SESSIONS = "/getUserSessions/{username}";
+    public static final String Group = "/group";
+    public static final String ALL_Group_NAMES = "/allGroupNames";
+    public static final String GET_Group = "/getGroup/{groupName}";
+    public static final String GET_Group_SESSIONS = "/getGroupSessions/{groupName}";
+    public static final String GET_All_Users_In_Group = "/getAllUsersInGroup/{groupName}";
 }

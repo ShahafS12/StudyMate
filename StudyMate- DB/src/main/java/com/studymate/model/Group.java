@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.studymate.model.Session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -109,7 +110,7 @@ public class Group {
        }
        return valid;
     }
-    public void addSession(Session session) {
+    public void addSessionToGroup(Session session) {
         sessions.add(session);
     }
     public String getGroupName() {
