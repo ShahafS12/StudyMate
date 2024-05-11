@@ -1,7 +1,9 @@
 package com.studymate.apis.controller;
 
 import com.studymate.dtos.GroupDto;
+import com.studymate.dtos.NotificationDto;
 import com.studymate.dtos.UserDto;
+import com.studymate.model.Notification;
 import com.studymate.service.GroupService;
 import com.studymate.service.UserService;
 import com.studymate.apis.constansts.URLMappingConstants;
@@ -49,7 +51,7 @@ public class UserController
 
     @GetMapping(URLMappingConstants.GET_USER_NOTIFICATIONS)
     @ResponseBody
-    public ResponseEntity<List<String>> GetUserNotifications(@PathVariable String username) {
+    public ResponseEntity<List<NotificationDto>> GetUserNotifications(@PathVariable String username) {
         log.info("Getting user notifications");
         return userService.getUserNotifications(username);
     }

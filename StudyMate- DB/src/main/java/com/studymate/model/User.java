@@ -25,7 +25,7 @@ public class User
     private String degree;
     private String curriculum;
     private String memberSince;
-    private List<String> notifications; //todo check if we need to create notifications class to include link to relevant object,date,viewed etc
+    private List<Notification> notifications; //todo check if we need to create notifications class to include link to relevant object,date,viewed etc
     private List<Session> sessions;
     private List<Group> groups;
     private String gender;
@@ -128,7 +128,7 @@ public class User
     public String getMemberSince() {
         return memberSince;
     }
-    public List<String> getNotifications() {
+    public List<Notification> getNotifications() {
         return notifications;
     }
     public List<Session> getSessions() {

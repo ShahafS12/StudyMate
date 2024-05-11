@@ -1,8 +1,10 @@
 package com.studymate.service;
 
 import com.studymate.dtos.GroupDto;
+import com.studymate.dtos.NotificationDto;
 import com.studymate.dtos.UserDto;
 import com.studymate.model.Group;
+import com.studymate.model.Notification;
 import com.studymate.repositories.UserRepository;
 import com.studymate.model.User;
 import org.apache.logging.log4j.LogManager;
@@ -118,15 +120,20 @@ public class UserService {
         return ResponseEntity.ok(groupDtos);
     }
 
-    public ResponseEntity<List<String>> getUserNotifications(String username) {
+    public ResponseEntity<List<NotificationDto>> getUserNotifications(String username) {
         log.info("Getting user notifications");
         User user = userRepository.findByUserName(username);
         if(user == null) {
             log.error(String.format("User %s not found", username));
             return ResponseEntity.badRequest().body(null);
         }
-        List<String> notifications = user.getNotifications();
+        List<Notification> notifications = user.getNotifications();
+        List<NotificationDto> notificationDtos = new ArrayList<>();
+        for(Notification notification : notifications) {
+            notificationDtos.add(new NotificationDto(notification.getMessage(), notification.getUser().getUserName(),
+                    notification.getUrl().toString(), notification.getCreatedDate().toString()));
+        }
         log.info("User notifications retrieved successfully");
-        return ResponseEntity.ok(notifications);
+        return ResponseEntity.ok(notificationDtos);
     }
 }
