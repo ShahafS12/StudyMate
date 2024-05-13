@@ -28,9 +28,9 @@ public class GroupDto {
     public void setGroupAdmin(String groupAdmin) {
         this.groupAdmin = groupAdmin;
     }
-    public void setGroup(String groupName, String university, String curriculum, Date CreatedDate , List<String> allUsers){
+    public void setGroup(String groupName, String institute, String curriculum, Date CreatedDate , List<String> allUsers){
     setGroupName(groupName);
-    setInstitute(university);
+    setInstitute(institute);
     setCurriculum(curriculum);
     setCreatedDate(CreatedDate);
     setMembers(allUsers);

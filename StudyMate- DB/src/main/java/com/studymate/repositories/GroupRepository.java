@@ -5,10 +5,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface GroupRepository extends MongoRepository<Group, String> {
     Group findByGroupName(@Param("groupName") String groupName);
     void deleteByGroupName(String groupName);
-
+    List<String> findAllGroupNames();
 
 }

@@ -1,4 +1,5 @@
 package com.studymate.model;
+import com.studymate.model.Session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.annotation.Id;
