@@ -4,12 +4,15 @@ import com.studymate.dtos.GroupDto;
 import com.studymate.dtos.NotificationDto;
 import com.studymate.dtos.UserDto;
 import com.studymate.model.Notification;
+import com.studymate.service.AuthenticationService;
 import com.studymate.service.GroupService;
 import com.studymate.service.UserService;
 import com.studymate.apis.constansts.URLMappingConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +27,11 @@ public class UserController
 
     @Autowired
     private UserService userService;
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
+
     @Autowired
-    private GroupService groupService;
+    private AuthenticationService authenticationService;
 
     @PostMapping(URLMappingConstants.CREATE_USER)
     @ResponseBody
@@ -44,9 +50,13 @@ public class UserController
 
     @GetMapping(URLMappingConstants.GET_USER)
     @ResponseBody
-    public ResponseEntity<UserDto> GetUser(@PathVariable String username) {
-        log.info("Getting user");
-        return userService.getUser(username);
+    public ResponseEntity<UserDto> GetUser(@RequestHeader("Authorization") String token,@PathVariable String username) {
+        if (authenticationService.validateToken(token,SECRET_KEY)) {
+            return userService.getUser(username);
+        } else {
+            log.error("Unauthorized access");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 
     @GetMapping(URLMappingConstants.GET_USER_NOTIFICATIONS)
@@ -61,15 +71,6 @@ public class UserController
     public ResponseEntity<List<GroupDto>> GetUserGroups(@PathVariable String username) {
         log.info("Getting user groups");
         return userService.getUserGroups(username);
-    }
-
-
-    @PostMapping(URLMappingConstants.LOGIN)
-    @ResponseBody
-    public ResponseEntity<String> Login(@RequestBody UserDto userDto) {
-        log.info("Logging in user");
-        return userService.loginUser(userDto.getUsername(), userDto.getPassword());
-
     }
 
 

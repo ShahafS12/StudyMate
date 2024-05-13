@@ -1,11 +1,13 @@
 package com.studymate.model;
 
+import com.studymate.model.Session.Session;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -103,20 +105,18 @@ class UserTest {
     }
 
     @Test
-    @Disabled
     public void testDeleteSession() {//todo check if this passes after Amits changes
         User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
         calendar.set(3038,Calendar.DECEMBER,31,23,59,59);
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup","testInstitute","testCurriculum" , new Date() , user, Collections.emptyList());
-        Session session = new Session(sessionDate, user, group);
+        Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),8,user,true,"regular sesson",group);
         user.addSession(session);
         user.deleteSession(session);
         assertFalse(user.getSessions().contains(session));
     }
 
     @Test
-    @Disabled
     public void testAddGroup() {//todo check if this passes after Amits changes
         User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
         User user2 = new User("JohnDoe2", "password123", "john.doe2@example.com", "Harvard", "Computer Science", "CS101", "male");
@@ -126,7 +126,6 @@ class UserTest {
     }
 
     @Test
-    @Disabled
     public void testAddGroupInvalidUser() {//todo check if this passes after Amits changes
         User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
         Group group = new Group("testGroup", "testInstitute", "testCurriculum", new Date(), user, Collections.emptyList());

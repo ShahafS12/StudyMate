@@ -16,8 +16,6 @@ import java.util.List;
 public class User
 {
     private static final Logger log = LogManager.getLogger(Group.class);
-    @Id
-    private String id;
     @Indexed(unique = true)
     private String userName;
     private String password;

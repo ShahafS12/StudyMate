@@ -3,3 +3,7 @@ spring:
         mongodb:
             uri: mongodb://localhost:27017/studyMate
             database: studyMate
+
+jwt:
+    secret: "044561dc31ea927d424cf34c400e6c2433e6488aaa797f37a8a2a33c50303d91"
+    expiration: 86400000

@@ -56,25 +56,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<String> loginUser(String username, String password) {
-        log.info("Logging in user");
-        User user = userRepository.findByUserName(username);
-        if(user == null) {
-            String errorMsg = "User not found";
-            log.error(errorMsg);
-            return ResponseEntity.badRequest().body(errorMsg);
-        }
-        if(passwordEncoder.matches(password, user.getEncryptedPassword())) {
-            String token = Jwts.builder().subject(username).claim("roles", "user").compact();
-            log.info("User logged in successfully");
-            return ResponseEntity.ok(token);
-        }
-        else {
-            String errorMsg = "Incorrect password";
-            log.error(errorMsg);
-            return ResponseEntity.badRequest().body(errorMsg);
-        }
-    }
+
 
     public ResponseEntity<List<String>> getAllUserNames()
     {
