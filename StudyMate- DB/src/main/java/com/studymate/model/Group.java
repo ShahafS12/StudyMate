@@ -27,7 +27,9 @@ public class Group {
         this.curriculum = curriculum;
         this.createdDate=createdDate;
         this.members = new ArrayList<>();
+        this.groupAdmin=groupAdmin;
         addMembers(members);
+        this.members.add(groupAdmin);
         this.sessions = new ArrayList<>();
         }
     }

@@ -14,6 +14,7 @@ import java.time.Instant;
 public class Session
 {
     private static final Logger log = LogManager.getLogger(Session.class);
+
     private final UUID id;
     private Date sessionDate;
     private final boolean virtualSession=false;
@@ -27,7 +28,12 @@ public class Session
     private Group group;
     private final Date creationDate;
 
+    public boolean isCanceled() {
+        return isCanceled;
+    }
+
     private boolean isCanceled =false;
+
 
     public Session(Date sessionDate,String location,List<User> participants,int maxParticipants,User createdBy,boolean limitParticipants,String description, Group group) {
         this.id = UUID.randomUUID();
@@ -38,17 +44,20 @@ public class Session
         this.sessionAdmins = new ArrayList<>();
         this.sessionAdmins.add(createdBy);
         this.participants = new ArrayList<>();
-        participants.add(createdBy);
+        this.participants.add(createdBy);
         setMaxParticipants(maxParticipants);
         setDescription(description);
         this.isCanceled = false;
         setGroup(createdBy,group);
+        this.limitParticipants=limitParticipants;
+        setDescription(description);
+        this.location=location;
 
     }
     public void setGroup(User createdBy,Group group) throws IllegalArgumentException{
        if (!group.isMember(createdBy))
         {
-            String message = String.format("Participant %s is part of the group related to the session", createdBy.getUserName());
+            String message = String.format("Participant %s is not part of the group related to the session", createdBy.getUserName());
                 log.error(message);
                 throw new IllegalArgumentException(message);
         }
@@ -63,7 +72,7 @@ public class Session
         }
         if (sessionDate.before(Date.from(Instant.now())))
          {
-              String errorMessage = String.format("can not set session %s date to the past\n",id.toString());
+              String errorMessage = String.format("can not set session date to the past");
              log.error(errorMessage);
              throw new IllegalArgumentException(errorMessage);
          }
@@ -77,7 +86,7 @@ public class Session
                 throw new IllegalArgumentException(message);
         }
 
-        if (maxParticipants>participants.size())
+        if (maxParticipants<participants.size())
         {
             String message = String.format("Can not set Max participants number of session %s to %d. The number of participants in the session is already bigger",id.toString(),maxParticipants);
                 log.error(message);
@@ -107,16 +116,17 @@ public class Session
     public void addParticipant(User managerCandidate,User participant) throws IllegalArgumentException {
         if (sessionAdmins.contains(managerCandidate))
         {
-            if (limitParticipants== false || participants.size() < maxParticipants)
-            {
-                if(participants.contains(participant)){
+             if(participants.contains(participant)){
                     String message = String.format("Participant %s is already in session %s", participant.getUserName(),id.toString());
                     log.error(message);
                     throw new IllegalArgumentException(message);
                 }
-                if(participant.isInGroup(group)){
-                    String message = String.format("can not add  %s to session $s.  %s is not in the group " +
-                            "related to session ", participant.getUserName(),id.toString(),participant.getUserName());
+            if (limitParticipants == false || participants.size() < maxParticipants)
+            {
+
+                if(!participant.isInGroup(group)){
+                    String message = String.format("can not add  %s to session %s.  %s is not in the group " +
+                            "related to session ", participant.getUserName());
                     log.error(message);
                     throw new IllegalArgumentException(message);
                 }
@@ -196,7 +206,6 @@ public class Session
         log.info(String.format("Participant %s removed from being admin in session %s "
                 ,admin.getUserName(),id.toString()));
     }
-
     public void cancelMeeting() {
         isCanceled = true;
          log.info(String.format("Canceling session %s",id.toString()));
@@ -215,9 +224,6 @@ public class Session
     public String getDescription() {
         return description;
     }
-    public UUID getId() {
-        return id;
-    }
     public Date getSessionDate() {
         return sessionDate;
     }
@@ -231,4 +237,7 @@ public class Session
         return participants;
     }
 
+    public UUID getId(){
+        return id;
+    }
 }
