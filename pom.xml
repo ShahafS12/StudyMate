@@ -9,8 +9,10 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>StudyMate-Engine</module>
+        <module>StudyMate- DB</module>
         <module>StudyMate-Apis</module>
+        <module>StudyMate-Service</module>
+        <module>StudyMate-DTO</module>
     </modules>
 
     <properties>
