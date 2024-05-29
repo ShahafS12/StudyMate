@@ -29,7 +29,6 @@ spec:
           imagePullPolicy: Always
 
           env:
-
             - name: KVS_SERVICE
               value: "studymate-kvs"
 

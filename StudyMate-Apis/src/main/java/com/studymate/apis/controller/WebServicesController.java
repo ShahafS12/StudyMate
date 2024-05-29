@@ -37,7 +37,7 @@ public class WebServicesController {
         log.info("Creating new group");
         return groupService.createGroup(groupDto.getGroupName(),groupDto.getUniversity(),
                 groupDto.getCurriculum(),groupDto.getGroupAdmin(),groupDto.getMembers());
-
+    }
 
     public ResponseEntity<String> Login(@RequestBody UserDto userDto) {
         log.info("Logging in user");
