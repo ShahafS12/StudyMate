@@ -9,6 +9,8 @@ import Logout from "./Logout";
 import AuthProvider, {useAuth} from "./security/AuthContext";
 import Register from "./Register";
 import HomePage from "./HomePage";
+import GroupsPerUser from "./GroupsPerUser";
+import SessionsPerUser from "./SessionsPerUser";
 
 function AuthenticatedRoute({children}) {
     const authContext = useAuth()
@@ -43,6 +45,17 @@ export default function StudyMate() {
                                 <Logout />
                             </AuthenticatedRoute>}>
                         </Route>
+                        <Route path='/groups' element={
+                            <AuthenticatedRoute>
+                                <GroupsPerUser />
+                            </AuthenticatedRoute>}>
+                        </Route>
+                        <Route path='/sessions' element={
+                            <AuthenticatedRoute>
+                                <SessionsPerUser />
+                            </AuthenticatedRoute>}>
+                        </Route>
+
                         <Route path='*' element={ <ErrorComponent /> }></Route>
                     </Routes>
                     <Footer />
