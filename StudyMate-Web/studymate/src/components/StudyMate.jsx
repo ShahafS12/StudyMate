@@ -35,7 +35,7 @@ export default function StudyMate() {
 
                         <Route path='/profile/:username' element={
                             <AuthenticatedRoute>
-                                <ProfileComponent />
+                                <ProfileComponent  />
                             </AuthenticatedRoute>}>
                         </Route>
                         <Route path='/logout' element={
