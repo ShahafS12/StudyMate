@@ -1,0 +1,17 @@
+.session-title {
+    font-weight: bold;
+    color: black;
+    font-size: 1.5em;
+}
+
+.calendar-card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Adjust as needed */
+}
+
+.calendar-card-body .react-calendar {
+    width: 80%; /* Adjust as needed */
+    height: 80%; /* Adjust as needed */
+}
