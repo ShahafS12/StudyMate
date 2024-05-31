@@ -37,7 +37,7 @@ export default function Login() {
                         <div className="card-body">
                             {errorMessage && <div className="alert alert-danger">Login failed</div>}
                             <div className="mb-3">
-                                <label htmlFor="username" className="form-label">User groupName:</label>
+                                <label htmlFor="username" className="form-label">UserName:</label>
                                 <input type="text" className="form-control" id="username" groupName="username" value={username} onChange={handleUserNameChange} />
                             </div>
                             <div className="mb-3">

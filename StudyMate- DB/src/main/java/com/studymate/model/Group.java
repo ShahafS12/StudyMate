@@ -6,6 +6,7 @@ import java.util.List;
 import com.studymate.model.Session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 public class Group {
     private static final Logger log = LogManager.getLogger(Group.class);
@@ -31,6 +32,7 @@ public class Group {
         addMembers(members);
         this.members.add(groupAdmin);
         this.sessions = new ArrayList<>();
+        groupAdmin.addGroup(this);
         }
     }
     public void addMembers(List<User> members) {

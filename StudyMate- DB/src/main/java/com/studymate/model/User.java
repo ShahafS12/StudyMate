@@ -16,8 +16,6 @@ import java.util.List;
 public class User
 {
     private static final Logger log = LogManager.getLogger(Group.class);
-    @Id
-    private String id;
     @Indexed(unique = true)
     private String userName;
     private String password;
@@ -26,7 +24,7 @@ public class User
     private String degree;
     private String curriculum;
     private String memberSince;
-    private List<String> notifications; //todo check if we need to create notifications class to include link to relevant object,date,viewed etc
+    private List<Notification> notifications; //todo check if we need to create notifications class to include link to relevant object,date,viewed etc
     private List<Session> sessions;
     private List<Group> groups;
     private String gender;
@@ -129,7 +127,7 @@ public class User
     public String getMemberSince() {
         return memberSince;
     }
-    public List<String> getNotifications() {
+    public List<Notification> getNotifications() {
         return notifications;
     }
     public List<Session> getSessions() {

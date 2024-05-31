@@ -8,6 +8,7 @@ import {useState} from "react";
 export default function Header() {
     const authContext = useAuth();
     const isAuthenticated = authContext.isAuthenticated;
+    const username = authContext.username; // Get the username from the authContext
     const [searchQuery, setSearchQuery] = useState('');
 
     function logout() {
@@ -35,7 +36,7 @@ export default function Header() {
                             <ul className="navbar-nav">
                                 <li className="nav-item fs-5">
                                     {isAuthenticated &&
-                                        <Link className="nav-link" to="/profile/Shahar">Profile</Link>}
+                                        <Link className="nav-link" to={`/profile/${username}`}>Profile</Link>}
                                 </li>
                                 <li className="nav-item fs-5">
                                     {isAuthenticated &&

@@ -1,4 +1,4 @@
-package Model;
+package com.studymate.model;
 
 import com.studymate.model.Group;
 import com.studymate.model.Session.Session;
