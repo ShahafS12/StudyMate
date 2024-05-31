@@ -2,7 +2,6 @@ package com.studymate.service;
 
 
 import com.studymate.dtos.GroupDto;
-import com.studymate.dtos.UserDto;
 import com.studymate.model.Group;
 import com.studymate.model.User;
 import com.studymate.repositories.GroupRepository;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class GroupService {
@@ -24,7 +22,7 @@ public class GroupService {
     private final UserRepository userRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, UserService userService, UserRepository userRepository) {
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
     }

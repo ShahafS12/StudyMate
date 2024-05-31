@@ -23,6 +23,8 @@ public class AuthenticationService {
     private static final Logger log = LogManager.getLogger(AuthenticationService.class);
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final String secretKey = "044561dc31ea927d424cf34c400e6c2433e6488aaa797f37a8a2a33c50303d91";
+    private final long expiration = 86400000;
 
 
     @Autowired
@@ -31,7 +33,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<String> loginUser(String username, String password, String secretKey, long expiration) {
+    public ResponseEntity<String> loginUser(String username, String password) {
         log.info("Logging in user");
         User user = userRepository.findByUserName(username);
         if(user == null) {
@@ -40,10 +42,10 @@ public class AuthenticationService {
             return ResponseEntity.badRequest().body(errorMsg);
         }
         if(passwordEncoder.matches(password, user.getEncryptedPassword())) {
-            String token = generateToken(username,secretKey,expiration);
+            String token = generateToken(username);
             log.info("User logged in successfully");
             String tokenWithBearer = "Bearer " + token;
-            validateToken(tokenWithBearer, secretKey);
+            validateToken(tokenWithBearer);
             return ResponseEntity.ok(token);
         }
         else {
@@ -53,7 +55,7 @@ public class AuthenticationService {
         }
     }
 
-    private String generateToken(String username, String secretKey, long expiration) {
+    private String generateToken(String username) {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         Date exp = new Date(nowMillis + expiration);
@@ -68,7 +70,7 @@ public class AuthenticationService {
                 .compact();
     }
 
-    public boolean validateToken(String token, String secretKey) {
+    public boolean validateToken(String token) {
         if(token == null || !token.startsWith("Bearer ")) {
             return false;
         }
@@ -84,7 +86,7 @@ public class AuthenticationService {
         }
     }
 
-    public String getUsernameFromToken(String token, String secretKey) {
+    public String getUsernameFromToken(String token) {
         SecretKey signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
         Claims claims = Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token).getPayload();
         return claims.getSubject();
