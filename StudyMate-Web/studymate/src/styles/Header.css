@@ -8,3 +8,44 @@
     display: flex;
     align-items: center;
 }
+
+.nav-item {
+    margin-right: 10px; /* Adjust as needed */
+}
+
+.notification-button {
+    background-color: #f8f9fa; /* Light gray background */
+    border: 1px solid #ced4da; /* Border color same as search button */
+    color: #495057; /* Text color same as search button */
+    border-radius: 0.25rem; /* Border radius same as search button */
+    padding: 0.375rem 0.75rem; /* Padding same as search button */
+    position: relative;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Transition same as search button */
+}
+
+.notification-button:hover {
+    border-color: #ced4da;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Box shadow on hover same as search button */
+}
+
+.notification-button:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Box shadow on focus same as search button */
+}
+
+.notification-button.new-notifications {
+    background-color: red;
+    color: white;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.5em;
+    min-width: 1em;
+    text-align: center;
+}

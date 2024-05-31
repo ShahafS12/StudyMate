@@ -80,3 +80,18 @@ export const getSessionsForUser = async (username, token) => {
         throw error;
     }
 }
+
+export const getUserNotifications = async (username, token) => {
+    try {
+        const response = await apiClient.get(`users/getUserNotifications/${username}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get notifications error:', error);
+        throw error;
+    }
+}
