@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
-public interface SessionRepository {
+public interface SessionRepository extends MongoRepository<Session, String> {
      Session findBySessionId(@Param("id") UUID username);
 }

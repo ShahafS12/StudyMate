@@ -15,7 +15,7 @@ public class Session
 {
     private static final Logger log = LogManager.getLogger(Session.class);
 
-    private final UUID id;
+    private final UUID sessionId;
     private Date sessionDate;
     private final boolean virtualSession=false;
     private String location;
@@ -32,7 +32,7 @@ public class Session
         return isCanceled;
     }
     public Session(Date sessionDate,String location,List<User> participants,int maxParticipants,User createdBy,boolean limitParticipants,String description, Group group) {
-        this.id = UUID.randomUUID();
+        this.sessionId = UUID.randomUUID();
         setSessionDate(sessionDate);
         this.creationDate = Date.from(Instant.now());
         checkCreatedBy(createdBy);
@@ -46,7 +46,7 @@ public class Session
         this.limitParticipants=limitParticipants;
         for(User participant : participants)
         {
-            addParticipant(createdBy,participant);
+            AdminAddParticipant(createdBy,participant);
         }
         setDescription(description);
         this.isCanceled = false;
@@ -68,7 +68,7 @@ public class Session
     public void setSessionDate(Date sessionDate) throws IllegalArgumentException {
         if (sessionDate==null)
         {
-            String errorMessage = String.format("can not set session %s date to NULL\n",id.toString());
+            String errorMessage = String.format("can not set session %s date to NULL\n", sessionId.toString());
              log.error(errorMessage);
              throw new IllegalArgumentException(errorMessage);
         }
@@ -83,24 +83,24 @@ public class Session
     public void setMaxParticipants(int maxParticipants) throws IllegalArgumentException {
          if (maxParticipants<= 0)
         {
-            String message = String.format("Can not set Max participants of session %s to zero or below",id.toString());
+            String message = String.format("Can not set Max participants of session %s to zero or below", sessionId.toString());
                 log.error(message);
                 throw new IllegalArgumentException(message);
         }
 
         if (maxParticipants<participants.size())
         {
-            String message = String.format("Can not set Max participants number of session %s to %d. The number of participants in the session is already bigger",id.toString(),maxParticipants);
+            String message = String.format("Can not set Max participants number of session %s to %d. The number of participants in the session is already bigger", sessionId.toString(),maxParticipants);
                 log.error(message);
                 throw new IllegalArgumentException(message);
         }
         this.maxParticipants = maxParticipants;
-        log.info(String.format("max Participants in session %s set to %d ",id,maxParticipants));
+        log.info(String.format("max Participants in session %s set to %d ", sessionId,maxParticipants));
     }
     public void checkCreatedBy(User createdBy) throws IllegalArgumentException {
         if (createdBy== null)
         {
-            String message = String.format("Can not set creator of session %s NULL",id.toString());
+            String message = String.format("Can not set creator of session %s NULL", sessionId.toString());
                 log.error(message);
                 throw new IllegalArgumentException(message);
         }
@@ -108,54 +108,59 @@ public class Session
     public void setDescription(String description) throws IllegalArgumentException {
         if (description==null || description.trim().isEmpty())
         {
-               String message = String.format("Description in session %s  can not be empty",id.toString());
+               String message = String.format("Description in session %s  can not be empty", sessionId.toString());
                 log.error(message);
                 throw new IllegalArgumentException(message);
         }
         this.description = description;
-            log.info(String.format("Description in session %s changed ",id.toString()));
+            log.info(String.format("Description in session %s changed ", sessionId.toString()));
     }
-    public void addParticipant(User managerCandidate,User participant) throws IllegalArgumentException {
+    public void AdminAddParticipant(User managerCandidate, User participant) throws IllegalArgumentException {
         checkIfUserIsAdmin(managerCandidate);
-        if (participants.contains(participant)) {
-            String message = String.format("Participant %s is already in session %s", participant.getUserName(), id.toString());
-            log.error(message);
-            throw new IllegalArgumentException(message);
-        }
-        else if (limitParticipants == false || participants.size() < maxParticipants) {
-
-            if (!participant.isInGroup(group)) {
+        addParticipant(participant);
+    }
+    public void addParticipant(User participant) throws IllegalArgumentException {
+         if (!participant.isInGroup(group)) {
                 String message = String.format("can not add  %s to session %s.  %s is not in the group " +
                         "related to session ", participant.getUserName());
                 log.error(message);
                 throw new IllegalArgumentException(message);
-            }
-            participants.add(participant);
-            participant.addSession(this);
-            String message = String.format("Participant %s added to session: %s", participant.getUserName(), id.toString());
-            log.info(message);
-        } 
+         }
+         else if (!isLimitParticipants() || participants.size() < maxParticipants) {
+             if (participants.contains(participant)){
+                 String message = String.format("Participant %s is already in session %s",
+                         participant.getUserName(), sessionId.toString());
+                log.error(message);
+                throw new IllegalArgumentException(message);
+             }
+             else {
+                 participants.add(participant);
+                 participant.addSession(this);
+                 String message = String.format("Participant %s added to session: %s", participant.getUserName(), sessionId.toString());
+                 log.info(message);
+
+             }
+        }
         else {
             String message = "Session is full";
             log.error(message);
             throw new IllegalArgumentException(message);
         }
-    
     }
     public void removeParticipantByAdmin(User managerCandidate, User participant)throws IllegalArgumentException {
         checkIfUserIsAdmin(managerCandidate);
          log.info(String.format("Participant %s trying to remove %s from session %s "
-                ,managerCandidate.getUserName(),participant.getUserName(),id.toString()));
+                ,managerCandidate.getUserName(),participant.getUserName(), sessionId.toString()));
         removeParticipant(participant);
     }
     public void setParticipantAsAdmin(User adminCandidate,User participant) throws IllegalArgumentException {
        log.info(String.format("Participant %s trying to set participant %s as admin of session %s"
-               ,adminCandidate.getUserName() ,participant.getUserName(),id.toString()));
+               ,adminCandidate.getUserName() ,participant.getUserName(), sessionId.toString()));
        checkIfUserIsParticipant(participant);
        checkIfUserIsAdmin(adminCandidate);
         sessionAdmins.add(participant);
         log.info(String.format("Participant %s is now admin of session %s"
-                ,participant.getUserName(),id.toString()));
+                ,participant.getUserName(), sessionId.toString()));
     }
     public void removeParticipant(User participant)throws IllegalArgumentException {
         checkIfUserIsParticipant(participant);
@@ -167,11 +172,11 @@ public class Session
         participants.remove(participant);
         participant.deleteSession(this);
         log.info(String.format("Participant %s removed in session %s "
-                ,participant.getUserName(),id.toString()));
+                ,participant.getUserName(), sessionId.toString()));
 
         if (participants.size()==0)
         {
-            log.info(String.format("Participants size is 0 deleting session %s", id.toString()));
+            log.info(String.format("Participants size is 0 deleting session %s", sessionId.toString()));
             cancelMeeting();
         }
     }
@@ -197,11 +202,17 @@ public class Session
          }
         sessionAdmins.remove(admin);
         log.info(String.format("Participant %s removed from being admin in session %s "
-                ,admin.getUserName(),id.toString()));
+                ,admin.getUserName(), sessionId.toString()));
+    }
+    public void adminRemoveParticipantFromBeingAdmin(User admin,User anotherAdmin)throws IllegalArgumentException {
+        checkIfUserIsAdmin(admin);
+        removeParticipantFromBeingAdmin(anotherAdmin);
+         log.info(String.format("Participant %s removed user %s from being admin in session %s "
+                ,admin.getUserName(),anotherAdmin.getUserName(), sessionId.toString()));
     }
     public void cancelMeeting() {
         isCanceled = true;
-         log.info(String.format("Canceling session %s",id.toString()));
+         log.info(String.format("Canceling session %s", sessionId.toString()));
     }
     public void checkIfUserIsAdmin(User managerCandidate) throws IllegalArgumentException{
         if (! sessionAdmins.contains(managerCandidate)){
@@ -257,13 +268,24 @@ public class Session
         }
         return adminsName;
     }
-    public UUID getId(){
-        return id;
+    public UUID getSessionId(){
+        return sessionId;
     }
     public void setLocation(String location){
         this.location=location;
     }
     public String getLocation(){
         return location;
+    }
+    public void setLimitParticipants(User admin ,int maxParticipants,boolean limitParticipants) {
+        checkIfUserIsAdmin(admin);
+        this.limitParticipants = limitParticipants;
+        if (limitParticipants)
+        {
+            setMaxParticipants(maxParticipants);
+        }
+    }
+    public boolean isLimitParticipants() {
+        return limitParticipants;
     }
 }

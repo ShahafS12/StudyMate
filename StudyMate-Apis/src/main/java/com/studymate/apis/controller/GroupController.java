@@ -21,6 +21,7 @@ public class GroupController
     private static final Logger log = LogManager.getLogger(GroupController.class);
     @Autowired
     private GroupService groupService;
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -28,8 +29,11 @@ public class GroupController
     @ResponseBody
     public ResponseEntity<String> createGroup(@RequestHeader("Authorization") String token,@RequestBody GroupDto groupDto) {
         log.info("Creating Group");
-        return groupService.createGroup(groupDto.getGroupName(), groupDto.getInstitute(),
-                groupDto.getCurriculum(), authenticationService.getUsernameFromToken(token),groupDto.getMembers()
+        List<String> names=groupDto.getMembers();
+        authenticationService.validateToken(token);
+        String name=authenticationService.getUsernameFromToken(token);
+        return groupService.createGroup(authenticationService.getUsernameFromToken(token),groupDto.getGroupName(), groupDto.getInstitute(),
+                groupDto.getCurriculum(),groupDto.getMembers()
                 );
     }
 

@@ -3,7 +3,6 @@ package com.studymate.service;
 
 import com.studymate.dtos.GroupDto;
 import com.studymate.dtos.SessionDto;
-import com.studymate.dtos.UserDto;
 import com.studymate.model.Group;
 import com.studymate.model.Session.Session;
 import com.studymate.model.User;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class GroupService {
@@ -87,8 +85,6 @@ public class GroupService {
             group.addMember(adminCandidate,userToAdd);
             groupRepository.save(group);
             userRepository.save(userToAdd);
-
-
             return ResponseEntity.ok("User added");
         }
         catch (Exception e) {
@@ -174,7 +170,7 @@ public class GroupService {
             {
                 allSessionsDto.add(new SessionDto(session.getParticipantsName(),session.getAdminsName()
                 ,session.getCreationDate(),session.getSessionDate(),session.getLocation(),
-                 session.getId(),session.getDescription()));
+                 session.getSessionId(),session.getDescription()));
             }
 
             return ResponseEntity.ok(allSessionsDto);

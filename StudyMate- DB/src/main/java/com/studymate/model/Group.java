@@ -17,6 +17,11 @@ public class Group {
     private List<User> groupAdmins;
     private List<User> members;
     private List<Session> sessions;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
     private boolean isDeleted =false;
     public static final int MAX_Name_Size = 120;
 
@@ -86,6 +91,7 @@ public class Group {
         removeMemberFromBeingAdmin(user);
      }
      members.remove(user);
+     user.deleteGroup(this);
      log.info(String.format("User '%s' removed from group '%s'", user.getUserName(), groupName));
      if (members.size()==0)
      {

@@ -1,17 +1,15 @@
 package com.studymate.apis.controller;
-import com.studymate.dtos.GroupDto;
 import com.studymate.dtos.SessionDto;
-import com.studymate.dtos.UserDto;
 import com.studymate.service.AuthenticationService;
 import com.studymate.service.GroupService;
 import com.studymate.apis.constansts.URLMappingConstants;
+import com.studymate.service.SessionService;
+import com.studymate.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequestMapping(URLMappingConstants.SESSION)
 @RestController
@@ -23,81 +21,70 @@ public class SessionController
     private GroupService groupService;
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private SessionService sessionService;
+    @Autowired
+    private UserService userService;
 
-    @PostMapping(URLMappingConstants.CREATE_GROUP)
+    @GetMapping(URLMappingConstants.GET_SESSION)
     @ResponseBody
-    public ResponseEntity<String> createGroup(@RequestHeader("Authorization") String token,@RequestBody GroupDto groupDto) {
-        log.info("Creating Group");
-        return groupService.createGroup(groupDto.getGroupName(), groupDto.getInstitute(),
-                groupDto.getCurriculum(), authenticationService.getUsernameFromToken(token),groupDto.getMembers()
-                );
+    public ResponseEntity<SessionDto> getSession(@PathVariable String id) {
+        log.info("getting session");
+        return sessionService.getSession(id);
     }
 
-    @GetMapping(URLMappingConstants.ALL_GROUP_NAMES)
+    @PostMapping(URLMappingConstants.ADD_USER_TO_SESSION)
     @ResponseBody
-    public ResponseEntity<List<String>> GetAllGroupsNames() {
-        log.info("Getting all groups names");
-        return groupService.getAllGroupNames();
+    public ResponseEntity<String> addUserToSession(@RequestHeader("Authorization") String token,@PathVariable String id , @PathVariable String username) {
+        log.info("add user to session");
+        return sessionService.AdminAddUserToSession(id,authenticationService.getUsernameFromToken(token),
+                username);
     }
 
-    @GetMapping(URLMappingConstants.GET_GROUP)
+    @PostMapping(URLMappingConstants.USER_ADD_HIMSELF_TO_SESSION)
     @ResponseBody
-    public ResponseEntity<GroupDto> GetGroup(@PathVariable String groupName) {
-        log.info("Getting group");
-        return groupService.getGroup(groupName);
+    public ResponseEntity<String> userAddHimselfToSession(@RequestHeader("Authorization") String token,@PathVariable String id) {
+        log.info("user added himself to session");
+        return sessionService.UserAddHimselfToSession(id,authenticationService.getUsernameFromToken(token));
     }
 
-    @PostMapping(URLMappingConstants.ADD_USER_TO_GROUP)
+    @PostMapping(URLMappingConstants.REMOVE_USER_FROM_SESSION)
     @ResponseBody
-    public ResponseEntity<String> AddUserToGroup(@RequestHeader("Authorization") String token,@PathVariable String groupName , @PathVariable String username) {
+    public ResponseEntity<String> removeUSerFromSession(@RequestHeader("Authorization") String token,@PathVariable String id , @PathVariable String username) {
+        log.info("remove user from session");
+        return sessionService.AdminRemoveUserFromSession(id,authenticationService.getUsernameFromToken(token),
+                username);
+    }
+
+    @PostMapping(URLMappingConstants.SET_USER_AS_ADMIN_OF_SESSION)
+    @ResponseBody
+    public ResponseEntity<String> AddUserToBeSessionAdmin(@RequestHeader("Authorization") String token,@PathVariable String id , @PathVariable String username) {
         log.info("Adding user to group");
-         return groupService.addUserToGroup(groupName,
-                authenticationService.getUsernameFromToken(token),username);
+         return sessionService.setUserAsAdminOfSession(id,authenticationService.getUsernameFromToken(token),
+                username);
     }
 
-    @PostMapping(URLMappingConstants.REMOVE_USER_FROM_GROUP)
+    @PostMapping(URLMappingConstants.REMOVE_USER_FROM_ADMIN_OF_SESSION)
     @ResponseBody
-    public ResponseEntity<String> removeUserToGroup(@RequestHeader("Authorization") String token,@PathVariable String groupName , @PathVariable String username) {
-        log.info("remove user from group");
-         return groupService.removeUserFromGroup(groupName,
-                authenticationService.getUsernameFromToken(token),username);
+    public ResponseEntity<String> removeUserFromBeingAdminOfGroup(@RequestHeader("Authorization") String token, @PathVariable String id , @PathVariable String username) {
+        log.info("remove user from being admin of sessoin");
+         return sessionService.removeUserFromAdminOfSession(id,authenticationService.getUsernameFromToken(token),
+                username);    }
+
+    @PostMapping(URLMappingConstants.DELETE_SESSION_BY_ADMIN)
+    @ResponseBody
+    public ResponseEntity<String> deleteSessionByAdmin(@RequestHeader("Authorization") String token,@PathVariable String id ) {
+        log.info("deleting session");
+         return sessionService.deleteSessionByAdmin(id,authenticationService.getUsernameFromToken(token));
     }
 
-    @PostMapping(URLMappingConstants.SET_USER_AS_ADMIN_OF_GROUP)
+    @PostMapping(URLMappingConstants.SET_MAX_PARTICIPANTS_FOR_SESSION)
     @ResponseBody
-    public ResponseEntity<String> AddUserToBeAdminOfGroup(@RequestHeader("Authorization") String token,@PathVariable String groupName , @PathVariable String username) {
-        log.info("Adding user to be a group's admin");
-         return groupService.addUserToBeGroupAdmin(groupName,
-                authenticationService.getUsernameFromToken(token),username);
-    }
+    public ResponseEntity<String> setMAxParticipantsFroSession(@RequestHeader("Authorization") String token,@PathVariable String id ,@PathVariable String isLimited,@PathVariable String numberToLimit) {
+        log.info("setting max participants for Session");
+            return sessionService.setMaxParticipants(id,authenticationService.getUsernameFromToken(token),
+                    isLimited,numberToLimit);
 
-    @PostMapping(URLMappingConstants.REMOVE_USER_AS_ADMIN_OF_GROUP)
-    @ResponseBody
-    public ResponseEntity<String> removeUserFromBeingAdminOfGroup(@RequestHeader("Authorization") String token,@PathVariable String groupName , @PathVariable String username) {
-        log.info("remove user from being admin of the group");
-         return groupService.removeUserFromGroupAdmin(groupName,
-                authenticationService.getUsernameFromToken(token),username);
-    }
-
-    @PostMapping(URLMappingConstants.DELETE_GROUP_BY_ADMIN)
-    @ResponseBody
-    public ResponseEntity<String> deleteGroupByAdmin(@RequestHeader("Authorization") String token,@PathVariable String groupName) {
-        log.info("deleting Group");
-         return groupService.deleteGroupByAdmin(groupName,authenticationService.getUsernameFromToken(token));
-    }
-
-     @GetMapping(URLMappingConstants.GET_GROUP_SESSIONS)
-    @ResponseBody
-    public ResponseEntity<List<SessionDto>> getGroupSessions(@PathVariable String groupName) {
-        log.info("getting all sessions");
-         return groupService.getGroupSessions(groupName);
-    }
-
-    @GetMapping(URLMappingConstants.GET_GROUP_MEMBERS)
-    @ResponseBody
-    public ResponseEntity<List<String>> getGroupMembers(@PathVariable String groupName) {
-        log.info("getting all group members");
-         return groupService.getGroupsMember(groupName);
     }
 
 }

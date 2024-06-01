@@ -2,7 +2,6 @@ package com.studymate.model;
 import com.studymate.model.Session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -104,7 +103,17 @@ public class User
             sessions.remove(session);
         }
         else {
-            String message = String.format("User %s tried to delete session %s that they are not in", userName, session.getId());
+            String message = String.format("User %s tried to delete session %s that they are not in", userName, session.getSessionId());
+            log.error(message);
+            throw new IllegalArgumentException(message);
+        }
+    }
+    public void deleteGroup(Group group) throws IllegalArgumentException {
+        if (groups.contains(group)) {
+            groups.remove(group);
+        }
+        else {
+            String message = String.format("User %s tried to delete group %s that they are not in", userName, group.getGroupName());
             log.error(message);
             throw new IllegalArgumentException(message);
         }
