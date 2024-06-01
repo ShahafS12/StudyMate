@@ -23,7 +23,10 @@ public class AuthenticationService {
     private static final Logger log = LogManager.getLogger(AuthenticationService.class);
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
+    @Value("${jwt.expiration}")
+    private long EXPIRATION ;
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
 
     @Autowired
     public AuthenticationService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
@@ -31,7 +34,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<String> loginUser(String username, String password, String secretKey, long expiration) {
+    public ResponseEntity<String> loginUser(String username, String password) {
         log.info("Logging in user");
         User user = userRepository.findByUserName(username);
         if(user == null) {
@@ -40,10 +43,10 @@ public class AuthenticationService {
             return ResponseEntity.badRequest().body(errorMsg);
         }
         if(passwordEncoder.matches(password, user.getEncryptedPassword())) {
-            String token = generateToken(username,secretKey,expiration);
+            String token = generateToken(username,SECRET_KEY,EXPIRATION);
             log.info("User logged in successfully");
             String tokenWithBearer = "Bearer " + token;
-            validateToken(tokenWithBearer, secretKey);
+            validateToken(tokenWithBearer);
             return ResponseEntity.ok(token);
         }
         else {
@@ -68,13 +71,13 @@ public class AuthenticationService {
                 .compact();
     }
 
-    public boolean validateToken(String token, String secretKey) {
+    public boolean validateToken(String token) {
         if(token == null || !token.startsWith("Bearer ")) {
             return false;
         }
         String actualToken = token.substring(7);
         try {
-            SecretKey signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
+            SecretKey signingKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
             Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(actualToken);
             return true;
         }
@@ -84,8 +87,8 @@ public class AuthenticationService {
         }
     }
 
-    public String getUsernameFromToken(String token, String secretKey) {
-        SecretKey signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
+    public String getUsernameFromToken(String token) {
+        SecretKey signingKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
         Claims claims = Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token).getPayload();
         return claims.getSubject();
     }

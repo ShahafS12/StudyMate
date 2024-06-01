@@ -6,7 +6,6 @@ import java.util.List;
 import com.studymate.model.Session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 public class Group {
     private static final Logger log = LogManager.getLogger(Group.class);
@@ -14,32 +13,45 @@ public class Group {
     private String institute;
     private String curriculum;
     private Date createdDate;
-    private User groupAdmin;
+    private User groupCreator;
+    private List<User> groupAdmins;
     private List<User> members;
     private List<Session> sessions;
-
+    private boolean isDeleted =false;
     public static final int MAX_Name_Size = 120;
 
-    public Group(String name, String institute, String curriculum,Date createdDate, User groupAdmin , List<User> members ) {
+    public Group(String name, String institute, String curriculum,Date createdDate, User groupCreator , List<User> members ) {
         if (validateParameters(name, institute, curriculum))
         {
+        this.members = new ArrayList<>();
+        this.sessions = new ArrayList<>();
+        this.groupAdmins=new ArrayList<>();
         this.groupName = name;
         this.institute = institute;
         this.curriculum = curriculum;
         this.createdDate=createdDate;
-        this.members = new ArrayList<>();
-        this.groupAdmin=groupAdmin;
-        addMembers(members);
-        this.members.add(groupAdmin);
-        this.sessions = new ArrayList<>();
-        groupAdmin.addGroup(this);
+        this.groupCreator=groupCreator;
+        if (members.size()!=0)
+        {
+        members.add(groupCreator);
+        }
+        else
+        {
+        members=new ArrayList<>();
+        members.add(groupCreator);
+        }
+        groupAdmins.add(groupCreator);
+        addMembers(groupCreator,members);
+
         }
     }
-    public void addMembers(List<User> members) {
-            try {
-                 for (User member : members) {
-                        addMember(member);
-                 }
+    public void addMembers(User adminCandidate, List<User> members) {
+        try
+        {
+             for (User member : members)
+             {
+                 addMember(adminCandidate,member);
+             }
             log.info("all members added");
         }
         catch (IllegalArgumentException e) {
@@ -47,7 +59,8 @@ public class Group {
             this.members.removeAll(members);
         }
     }
-    public void addMember(User user) throws IllegalArgumentException {
+    public void addMember(User adminCandidate,User user) throws IllegalArgumentException {
+        checkIfUserIsAdmin(adminCandidate);
         if (isMember(user)) {
             String message = String.format("User '%s' is already a member of the group", user.getUserName());
             log.error(message);
@@ -57,14 +70,28 @@ public class Group {
         user.addGroup(this);
         log.info(String.format("User '%s' added to group '%s'", user.getUserName(), groupName));
     }
-    public void removeMember(User user) throws IllegalArgumentException {
+    public void removeMemberByAdmin(User adminCandidate, User user) throws IllegalArgumentException {
+        checkIfUserIsAdmin(adminCandidate);
         if (!isMember(user)) {
             String message = String.format("Cannot remove user. User '%s' is not a member of the group", user.getUserName());
             log.error(message);
             throw new IllegalArgumentException(message);
         }
-        members.remove(user);
-        log.info(String.format("User '%s' removed from group '%s'", user.getUserName(), groupName));
+        removeMember(user);
+    }
+    public void removeMember( User user) throws IllegalArgumentException {
+     checkIfUserIsMember(user);
+     if (groupAdmins.contains(user) )
+     {
+        removeMemberFromBeingAdmin(user);
+     }
+     members.remove(user);
+     log.info(String.format("User '%s' removed from group '%s'", user.getUserName(), groupName));
+     if (members.size()==0)
+     {
+        log.info(String.format("members size is 0 deleting group %s", groupName));
+        deleteGroup();
+     }
     }
     public void setGroupName(String groupName) {
         StringBuilder errorMessage = new StringBuilder();
@@ -106,13 +133,19 @@ public class Group {
        // NEED to think if we want to have a list of Curriculum
         return valid;
     }
-    public boolean checkcreatedDateViolation(Date createdDate, StringBuilder errorMessage){
-        boolean valid = true;
-        Date currentDate = new Date();
-       if (createdDate.after(currentDate)) {
-           valid = false;
-       }
-       return valid;
+    public void checkIfUserIsAdmin(User managerCandidate) throws IllegalArgumentException{
+        if (! groupAdmins.contains(managerCandidate)){
+              String message = String.format("USer %s is not in an admin of the group", managerCandidate.getUserName());
+                log.error(message);
+                throw new IllegalArgumentException(message);
+            }
+    }
+    public void checkIfUserIsMember(User participantCandidate) throws IllegalArgumentException{
+        if (! members.contains(participantCandidate)){
+              String message = String.format("user %s is not in a member of the group", participantCandidate.getUserName());
+                log.error(message);
+                throw new IllegalArgumentException(message);
+            }
     }
     public void addSessionToGroup(Session session) {
         sessions.add(session);
@@ -123,7 +156,6 @@ public class Group {
     public boolean isMember(User user) {
         return members.contains(user);
     }
-
     //create getters
     public String getInstitute() {
         return institute;
@@ -134,8 +166,8 @@ public class Group {
     public Date getCreatedDate() {
         return createdDate;
     }
-    public User getGroupAdmin() {
-        return groupAdmin;
+    public List<User> getGroupAdmin() {
+        return groupAdmins;
     }
     public List<User> getMembers() {
         return members;
@@ -149,6 +181,64 @@ public class Group {
             membersNames.add(member.getUserName());
         }
         return membersNames;
+    }
+    public List<String> getAdminsNames() {
+        List<String> AdminNames = new ArrayList<>();
+        for (User admin : groupAdmins) {
+            AdminNames.add(admin.getUserName());
+        }
+        return AdminNames;
+    }
+    public void setMemberAsAdmin(User adminCandidate,User member) throws IllegalArgumentException {
+       log.info(String.format("Member %s trying to set User %s as admin of Group %s"
+               ,adminCandidate.getUserName() ,member.getUserName(),groupName));
+       checkIfUserIsMember(member);
+       checkIfUserIsAdmin(adminCandidate);
+        groupAdmins.add(member);
+        log.info(String.format("user %s is now admin of group %s"
+                ,member.getUserName(),groupName));
+    }
+    public void removeMemberFromBeingAdminByAdmin(User adminCandidate,User member)throws IllegalArgumentException {
+        checkIfUserIsAdmin(adminCandidate);
+        removeMemberFromBeingAdmin(member);
+    }
+
+    public void removeMemberFromBeingAdmin(User admin)throws IllegalArgumentException {
+        checkIfUserIsAdmin(admin);
+        if ( groupAdmins.size()==1){ // the only admin want to not be admin of Group
+            User nextAdmin = null;
+            int i=0;
+            boolean found=false;
+            while (i<members.size() && !found) // look for the next participant to be admin
+            {
+                nextAdmin=members.get(i);
+                if (nextAdmin!=admin)
+                {
+                    found=true;
+                }
+                i++;
+            }
+            if (found)
+            {
+                setMemberAsAdmin(admin,nextAdmin);
+            }
+        }
+        groupAdmins.remove(admin);
+        log.info(String.format("member %s removed from being admin in group %s "
+                ,admin.getUserName(),groupName));
+    }
+    public void deleteGroup() {
+        isDeleted = true;
+         log.info(String.format("deleting group %s",groupName));
+    }
+    public void deleteGroupByAdmin(User managerCandidate ){
+        checkIfUserIsAdmin(managerCandidate);
+        int size=members.size();
+        for (int i=0;i<size;i++)
+        {
+            User member=members.get(0);
+            removeMember(member);
+        }
     }
 
 }

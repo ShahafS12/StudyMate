@@ -21,10 +21,7 @@ import static com.studymate.apis.constansts.URLMappingConstants.VALIDATE_TOKEN;
 public class AuthenticationController {
 
     private static final Logger log = LogManager.getLogger(AuthenticationController.class);
-    @Value("${jwt.expiration}")
-    private long EXPIRATION ;
-    @Value("${jwt.secret}")
-    private String SECRET_KEY;
+
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -34,13 +31,13 @@ public class AuthenticationController {
     @ResponseBody
     public ResponseEntity<String> Login(@RequestBody UserDto userDto) {
         log.info("Logging in user");
-        return authenticationService.loginUser(userDto.getUsername(), userDto.getPassword(),SECRET_KEY,EXPIRATION);
+        return authenticationService.loginUser(userDto.getUsername(), userDto.getPassword());
 
     }
 
     @GetMapping(VALIDATE_TOKEN)
     public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token) {
-        if (authenticationService.validateToken(token,SECRET_KEY)) {
+        if (authenticationService.validateToken(token)) {
             return ResponseEntity.ok("Valid token");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");

@@ -27,14 +27,10 @@ public class Session
     private final User createdBy;
     private Group group;
     private final Date creationDate;
-
+    private boolean isCanceled;
     public boolean isCanceled() {
         return isCanceled;
     }
-
-    private boolean isCanceled =false;
-
-
     public Session(Date sessionDate,String location,List<User> participants,int maxParticipants,User createdBy,boolean limitParticipants,String description, Group group) {
         this.id = UUID.randomUUID();
         setSessionDate(sessionDate);
@@ -45,11 +41,17 @@ public class Session
         this.sessionAdmins.add(createdBy);
         this.participants = new ArrayList<>();
         this.participants.add(createdBy);
+        createdBy.addSession(this);
         setMaxParticipants(maxParticipants);
+        this.limitParticipants=limitParticipants;
+        for(User participant : participants)
+        {
+            addParticipant(createdBy,participant);
+        }
         setDescription(description);
         this.isCanceled = false;
         setGroup(createdBy,group);
-        this.limitParticipants=limitParticipants;
+
         setDescription(description);
         this.location=location;
 
@@ -114,81 +116,59 @@ public class Session
             log.info(String.format("Description in session %s changed ",id.toString()));
     }
     public void addParticipant(User managerCandidate,User participant) throws IllegalArgumentException {
-        if (sessionAdmins.contains(managerCandidate))
-        {
-             if(participants.contains(participant)){
-                    String message = String.format("Participant %s is already in session %s", participant.getUserName(),id.toString());
-                    log.error(message);
-                    throw new IllegalArgumentException(message);
-                }
-            if (limitParticipants == false || participants.size() < maxParticipants)
-            {
+        checkIfUserIsAdmin(managerCandidate);
+        if (participants.contains(participant)) {
+            String message = String.format("Participant %s is already in session %s", participant.getUserName(), id.toString());
+            log.error(message);
+            throw new IllegalArgumentException(message);
+        }
+        else if (limitParticipants == false || participants.size() < maxParticipants) {
 
-                if(!participant.isInGroup(group)){
-                    String message = String.format("can not add  %s to session %s.  %s is not in the group " +
-                            "related to session ", participant.getUserName());
-                    log.error(message);
-                    throw new IllegalArgumentException(message);
-                }
-                participants.add(participant);
-                String message = String.format("Participant %s added to session: %s", participant.getUserName(), id.toString());
-                log.info(message);
+            if (!participant.isInGroup(group)) {
+                String message = String.format("can not add  %s to session %s.  %s is not in the group " +
+                        "related to session ", participant.getUserName());
+                log.error(message);
+                throw new IllegalArgumentException(message);
             }
-            else {
+            participants.add(participant);
+            participant.addSession(this);
+            String message = String.format("Participant %s added to session: %s", participant.getUserName(), id.toString());
+            log.info(message);
+        } 
+        else {
             String message = "Session is full";
             log.error(message);
             throw new IllegalArgumentException(message);
-            }
         }
-        else
-        {
-             String message = String.format("Participant %s is not in an admin of the session", participant.getUserName());
-            log.error(message);
-            throw new IllegalArgumentException(message);
-        }
+    
     }
     public void removeParticipantByAdmin(User managerCandidate, User participant)throws IllegalArgumentException {
-        givePermissionsToAdmin(managerCandidate);
+        checkIfUserIsAdmin(managerCandidate);
          log.info(String.format("Participant %s trying to remove %s from session %s "
                 ,managerCandidate.getUserName(),participant.getUserName(),id.toString()));
         removeParticipant(participant);
     }
-     public void adminSetParticipantAsAdmin(User admin, User participant) throws IllegalArgumentException {
-        log.info(String.format("Participant %s trying to set participant %s as admin of session %s"
-               ,admin.getUserName() ,participant.getUserName(),id.toString()));
-        givePermissionsToAdmin(admin);
-        setParticipantAsAdmin(participant);
-    }
-    public void setParticipantAsAdmin(User participant) throws IllegalArgumentException {
-        if (!participants.contains(participant))
-        {
-              String message = String.format("Participant %s is not part of the session %s", participant.getUserName(),id.toString());
-                log.error(message);
-                throw new IllegalArgumentException(message);
-        }
+    public void setParticipantAsAdmin(User adminCandidate,User participant) throws IllegalArgumentException {
+       log.info(String.format("Participant %s trying to set participant %s as admin of session %s"
+               ,adminCandidate.getUserName() ,participant.getUserName(),id.toString()));
+       checkIfUserIsParticipant(participant);
+       checkIfUserIsAdmin(adminCandidate);
         sessionAdmins.add(participant);
         log.info(String.format("Participant %s is now admin of session %s"
                 ,participant.getUserName(),id.toString()));
     }
     public void removeParticipant(User participant)throws IllegalArgumentException {
+        checkIfUserIsParticipant(participant);
         boolean admin = sessionAdmins.contains(participant);
-        if (! participants.contains(participant))
-        {
-            String message = String.format("Participant %s is not in an part of the session %s", participant.getUserName(),id.toString());
-                log.error(message);
-                throw new IllegalArgumentException(message);
-        }
         if (admin)
         {
             removeParticipantFromBeingAdmin(participant);
         }
         participants.remove(participant);
+        participant.deleteSession(this);
         log.info(String.format("Participant %s removed in session %s "
                 ,participant.getUserName(),id.toString()));
-        if (admin && participants.size()>0)
-        {
-            setParticipantAsAdmin(participants.get(0)); // put random participant as admin
-        }
+
         if (participants.size()==0)
         {
             log.info(String.format("Participants size is 0 deleting session %s", id.toString()));
@@ -196,12 +176,25 @@ public class Session
         }
     }
     public void removeParticipantFromBeingAdmin(User admin)throws IllegalArgumentException {
-        if (! sessionAdmins.contains(admin))
-        {
-            String message = String.format("Participant %s is not admin of the session %s", admin.getUserName(),id.toString());
-                log.error(message);
-                throw new IllegalArgumentException(message);
-        }
+        checkIfUserIsAdmin(admin);
+         if (sessionAdmins.size()==1 ) { // the only admin want to not be admin
+            User nextAdmin = null;
+            int i=0;
+            boolean found=false;
+            while (i<participants.size() && !found) // look for the next participant to be admin
+            {
+                nextAdmin=participants.get(i);
+                if (nextAdmin!=admin)
+                {
+                    found=true;
+                }
+                i++;
+            }
+            if (found)
+            {
+                setParticipantAsAdmin(admin, nextAdmin);
+            }
+         }
         sessionAdmins.remove(admin);
         log.info(String.format("Participant %s removed from being admin in session %s "
                 ,admin.getUserName(),id.toString()));
@@ -210,16 +203,28 @@ public class Session
         isCanceled = true;
          log.info(String.format("Canceling session %s",id.toString()));
     }
-    public void givePermissionsToAdmin(User managerCandidate) throws IllegalArgumentException{
+    public void checkIfUserIsAdmin(User managerCandidate) throws IllegalArgumentException{
         if (! sessionAdmins.contains(managerCandidate)){
               String message = String.format("Participant %s is not in an admin of the session", managerCandidate.getUserName());
                 log.error(message);
                 throw new IllegalArgumentException(message);
             }
     }
+    public void checkIfUserIsParticipant(User participantCandidate) throws IllegalArgumentException{
+        if (! participants.contains(participantCandidate)){
+              String message = String.format("Participant %s is not in a participant of the session", participantCandidate.getUserName());
+                log.error(message);
+                throw new IllegalArgumentException(message);
+            }
+    }
     public void cancelMeetingByAdmin (User managerCandidate ){
-        givePermissionsToAdmin(managerCandidate);
-        cancelMeeting();
+        checkIfUserIsAdmin(managerCandidate);
+        int size=participants.size();
+        for (int i=0;i<size;i++)
+        {
+            User participant=participants.get(0);
+            removeParticipant(participant);
+        }
     }
     public String getDescription() {
         return description;
@@ -236,8 +241,29 @@ public class Session
     public List<User> getParticipants() {
         return participants;
     }
-
+    public List<String> getParticipantsName() {
+        List participantsName=new ArrayList<>();
+        for (User participant:participants)
+        {
+            participantsName.add(participant.getUserName());
+        }
+        return participantsName;
+    }
+    public List<String> getAdminsName() {
+        List adminsName=new ArrayList<>();
+        for (User admin:sessionAdmins)
+        {
+            adminsName.add(admin.getUserName());
+        }
+        return adminsName;
+    }
     public UUID getId(){
         return id;
+    }
+    public void setLocation(String location){
+        this.location=location;
+    }
+    public String getLocation(){
+        return location;
     }
 }

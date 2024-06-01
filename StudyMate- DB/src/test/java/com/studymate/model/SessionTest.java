@@ -56,7 +56,7 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-        group.addMember(user2);
+        group.addMember(user,user2);
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),8,user,true,"regular sesson",group);
         session.addParticipant(user,user2);
         assertTrue(session.getParticipants().contains(user2));
@@ -108,7 +108,7 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(100);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-        group.addMember(user2);
+        group.addMember(user,user2);
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),1,user,true,"regular sesson",group);
         try {
             session.addParticipant(user,user2);
@@ -129,7 +129,7 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(100);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-        group.addMember(user2);
+        group.addMember(user,user2);
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),1,user,false,"regular sesson",group);
         try {
             session.addParticipant(user,user2);
@@ -152,7 +152,7 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(100);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-        group.addMember(user2);
+        group.addMember(user,user2);
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),1,user,false,"regular sesson",group);
         try {
             session.addParticipant(user,user2);

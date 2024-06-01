@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping(URLMappingConstants.GROUP)
+@RequestMapping(URLMappingConstants.SESSION)
 @RestController
 //@CrossOrigins(origins = "http://localhost:3000", allowCredentials = "true")
-public class GroupController
+public class SessionController
 {
     private static final Logger log = LogManager.getLogger(GroupController.class);
     @Autowired

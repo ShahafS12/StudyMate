@@ -51,7 +51,7 @@ public class UserController
     @GetMapping(URLMappingConstants.GET_USER)
     @ResponseBody
     public ResponseEntity<UserDto> GetUser(@RequestHeader("Authorization") String token,@PathVariable String username) {
-        if (authenticationService.validateToken(token,SECRET_KEY)) {
+        if (authenticationService.validateToken(token)) {
             return userService.getUser(username);
         } else {
             log.error("Unauthorized access");
@@ -72,21 +72,5 @@ public class UserController
         log.info("Getting user groups");
         return userService.getUserGroups(username);
     }
-
-
-//    public ResponseEntity<String> CreateGroup(@RequestBody GroupDto groupDto) {//todo check amit created a new controller class for group
-//        log.info("Creating new group");
-//        return groupService.createGroup(groupDto.getGroupName(),groupDto.getUniversity(),
-//                groupDto.getCurriculum(),groupDto.getGroupAdmin(),groupDto.getMembers());
-//    @PostMapping(URLMappingConstants.CREATE_GROUP)
-//    @ResponseBody
-//    public ResponseEntity<String> CreateGroup(@RequestBody UserDto userDto) {
-//        log.info("Creating new group");
-//      //  return service.createUser(userName,password);
-//        return userService.addUser(userDto.getUsername(), userDto.getPassword(), userDto.getEmail(), userDto.getUniversity(), userDto.getDegree(),
-//                userDto.getCurriculum(), userDto.getGender());
-//    }
-
-
 
 }

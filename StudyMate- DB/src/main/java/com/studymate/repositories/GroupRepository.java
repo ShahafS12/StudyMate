@@ -14,5 +14,6 @@ public interface GroupRepository extends MongoRepository<Group, String> {
     void deleteByGroupName(String groupName);
     @Query(value = "{}", fields = "{'groupName': 1, '_id': 0}")
     List<String> findAllGroupNames();
+    void addUserToGroup();
 
 }

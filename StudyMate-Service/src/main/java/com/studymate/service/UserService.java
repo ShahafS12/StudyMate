@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import io.jsonwebtoken.Jwts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,13 +92,13 @@ public class UserService {
             return ResponseEntity.badRequest().body(null);
         }
         List<Group> groups = user.getGroups();
-        List<GroupDto> groupDtos = new ArrayList<>();
+        List<GroupDto> groupDto = new ArrayList<>();
         for(Group group : groups) {
-            groupDtos.add(new GroupDto(group.getGroupName(), group.getInstitute(), group.getCurriculum(),
-                    group.getGroupAdmin().getUserName(), group.getMembersNames()));
+            groupDto.add(new GroupDto(group.getGroupName(), group.getInstitute(), group.getCurriculum(),
+                    group.getAdminsNames(), group.getMembersNames()));
         }
         log.info("User groups retrieved successfully");
-        return ResponseEntity.ok(groupDtos);
+        return ResponseEntity.ok(groupDto);
     }
 
     public ResponseEntity<List<NotificationDto>> getUserNotifications(String username) {
@@ -110,12 +109,12 @@ public class UserService {
             return ResponseEntity.badRequest().body(null);
         }
         List<Notification> notifications = user.getNotifications();
-        List<NotificationDto> notificationDtos = new ArrayList<>();
+        List<NotificationDto> notificationDto = new ArrayList<>();
         for(Notification notification : notifications) {
-            notificationDtos.add(new NotificationDto(notification.getMessage(), notification.getUser().getUserName(),
+            notificationDto.add(new NotificationDto(notification.getMessage(), notification.getUser().getUserName(),
                     notification.getUrl().toString(), notification.getCreatedDate().toString()));
         }
         log.info("User notifications retrieved successfully");
-        return ResponseEntity.ok(notificationDtos);
+        return ResponseEntity.ok(notificationDto);
     }
 }

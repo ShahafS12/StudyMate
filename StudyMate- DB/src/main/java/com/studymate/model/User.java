@@ -88,7 +88,6 @@ public class User
         if (!groups.contains(group)) {
             groups.add(group);
             if(!group.isMember(this))
-                group.addMember(this);
             log.info(String.format("User %s added to group %s", userName, group.getGroupName()));
         }
         else {
