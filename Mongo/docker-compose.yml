@@ -4,3 +4,7 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+  client:
+    image: studymate-client
+    ports:
+      - "3000:3000"
