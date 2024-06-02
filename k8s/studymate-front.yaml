@@ -22,8 +22,8 @@ spec:
 #        - name: ghcr-login-secret
 
       containers:
-        - name: studymate
-          image: shaharshwartz/studymate:1.0
+        - name: studymate-frontend
+          image: shaharshwartz/studymate-client:1.0
           ports:
             - containerPort: 3000
           imagePullPolicy: Always
@@ -50,7 +50,7 @@ metadata:
     # so it resolves to:
     # studymate.israelcentral.cloudapp.azure.com
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - port: 3000
       targetPort: 3000
