@@ -56,7 +56,7 @@ export default function Header() {
                                             <Link className="nav-link" to={`/profile/${username}`}>Profile</Link>
                                         </li>
                                         <li className="nav-item fs-5">
-                                            <Link className="nav-link" to="/groups">My Groups</Link>
+                                            <Link className="nav-link" to="/mygroups">My Groups</Link>
                                         </li>
                                         <li className="nav-item fs-5">
                                             <Link className="nav-link" to="/sessions">My Sessions</Link>

@@ -13,16 +13,18 @@ export default function AuthProvider(props) {
 
     async function login(username, password) {
         try {
-            const response =  await loginUser(username, password);
+            const response = await loginUser(username, password);
             if (response) {
                 setAuthenticated(true);
                 setUsername(username);
                 setToken(response);
+                localStorage.setItem('username', username); // Store the username in localStorage
                 return true;
             } else {
                 setAuthenticated(false);
                 setUsername(null);
                 setToken(null); // Clear the token
+                localStorage.removeItem('username'); // Remove the username from localStorage
                 return false;
             }
         } catch (error) {
@@ -30,6 +32,7 @@ export default function AuthProvider(props) {
             setAuthenticated(false);
             setUsername(null);
             setToken(null); // Clear the token
+            localStorage.removeItem('username'); // Remove the username from localStorage
             return false;
         }
     }

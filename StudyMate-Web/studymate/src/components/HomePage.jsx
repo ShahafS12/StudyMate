@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function HomePage() {
 return (
         <div className="container">
@@ -9,6 +11,7 @@ return (
                         <p>StudyMate is a social platform for students to connect, collaborate and study together.</p>
                             <p>Sign up to create a profile and join groups to study together.</p>
                             <p>Join us today and start your journey to success!</p>
+                            <Link to="/groups" className="btn btn-primary">Explore Our Groups</Link>
                         </div>
                     </div>
                 </div>

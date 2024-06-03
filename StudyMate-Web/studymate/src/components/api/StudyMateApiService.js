@@ -95,3 +95,34 @@ export const getUserNotifications = async (username, token) => {
         throw error;
     }
 }
+
+export const getGroups = async (token) => {
+    try {
+        const response = await apiClient.get(`groups/allGroupNames`, {
+            headers: {
+          //      'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get groups error:', error);
+        throw error;
+    }
+}
+
+export const createGroup = async (group, token) => {
+    try {
+        const response = await apiClient.post(`group/createGroup`, JSON.stringify(group), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Create group error:', error);
+        throw error;
+    }
+}

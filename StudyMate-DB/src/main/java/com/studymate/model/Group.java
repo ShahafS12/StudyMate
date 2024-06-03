@@ -7,6 +7,7 @@ import com.studymate.model.Session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.stream.Collectors;
 
 public class Group {
     private static final Logger log = LogManager.getLogger(Group.class);
@@ -54,7 +55,8 @@ public class Group {
             throw new IllegalArgumentException(message);
         }
         members.add(user);
-        user.addGroup(this);
+        if(!user.isInGroup(this))
+            user.addGroup(this);
         log.info(String.format("User '%s' added to group '%s'", user.getUserName(), groupName));
     }
     public void removeMember(User user) throws IllegalArgumentException {
@@ -149,6 +151,18 @@ public class Group {
             membersNames.add(member.getUserName());
         }
         return membersNames;
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                ", groupName='" + groupName + '\'' +
+                ", institute='" + institute + '\'' +
+                ", curriculum='" + curriculum + '\'' +
+                ", createdDate=" + createdDate +
+                ", groupAdmin=" + groupAdmin.getUserName() +
+                ", members=" + members.stream().map(User::getUserName).collect(Collectors.toList()) +
+                '}';
     }
 
 }

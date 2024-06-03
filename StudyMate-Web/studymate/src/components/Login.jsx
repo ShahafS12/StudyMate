@@ -18,15 +18,36 @@ export default function Login() {
         setPassword(event.target.value);
     }
 
-    async function handleSubmit() {
-        const loginSuccessful = await authContext.login(username, password);
-        console.log('Login successful:', loginSuccessful);
-        if (loginSuccessful) {
-            navigate(`/profile/${username}`);
-        } else {
-            setErrorMessage(true);
+    function checkValidity(user) {
+        if (!user.username) {
+            throw new Error('Username is required');
+        }
+        if (!user.password) {
+            throw new Error('Password is required');
         }
     }
+
+    async function handleSubmit() {
+        const user = {
+            username,
+            password
+        };
+
+        try {
+            checkValidity(user);
+            const loginSuccessful = await authContext.login(username, password);
+            console.log('Login successful:', loginSuccessful);
+            if (loginSuccessful) {
+                navigate(`/profile/${username}`);
+            } else {
+                setErrorMessage('Login failed: Incorrect username or password');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            setErrorMessage(error.message);
+        }
+    }
+
 
     return (
         <div className="container">
@@ -35,7 +56,7 @@ export default function Login() {
                     <div className="card">
                         <div className="card-header">Login</div>
                         <div className="card-body">
-                            {errorMessage && <div className="alert alert-danger">Login failed</div>}
+                            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                             <div className="mb-3">
                                 <label htmlFor="username" className="form-label">UserName:</label>
                                 <input type="text" className="form-control" id="username" groupName="username" value={username} onChange={handleUserNameChange} />

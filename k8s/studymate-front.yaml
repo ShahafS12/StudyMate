@@ -23,18 +23,13 @@ spec:
 
       containers:
         - name: studymate-frontend
-          image: shaharshwartz/studymate-client:1.0
+          image: ghcr.io/shahafs12/studymate-client:1.0
           ports:
             - containerPort: 3000
           imagePullPolicy: Always
 
-          env:
-
-            - name: KVS_SERVICE
-              value: "studymate-kvs"
-
-            - name: COUNTER
-              value: "VISITS"
+      imagePullSecrets:
+        - name: ghcr-secret
 
 ---
 apiVersion: v1
@@ -50,9 +45,11 @@ metadata:
     # so it resolves to:
     # studymate.israelcentral.cloudapp.azure.com
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 3000
       targetPort: 3000
+      nodePort: 3000
+
   selector:
     application/component: frontend
