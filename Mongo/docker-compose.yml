@@ -4,7 +4,24 @@ services:
     image: mongo
     ports:
       - "27017:27017"
-  client:
-    image: studymate-client
-    ports:
-      - "3000:3000"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: studymate
+      MONGO_INITDB_ROOT_PASSWORD: shaharamitshahaf
+  # backend:
+  #   image: ghcr.io/shahafs12/studymate-server:1.0
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: studymate
+  #     MONGO_INITDB_ROOT_PASSWORD: shaharamitshahaf
+  #     MONGO_HOST: mongo
+  #     MONGO_PORT: 27017
+  #   depends_on:
+  #     - mongo
+
+  # client:
+  #   image: ghcr.io/shahafs12/studymate-client:1.0
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend

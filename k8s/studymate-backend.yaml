@@ -20,14 +20,30 @@ spec:
     spec:
       containers:
         - name: studymate
-          image: redis
+          image: ghcr.io/shahafs12/studymate-server:1.0
 
           ports:
-            - containerPort: 6379
+            - containerPort: 3000
 
           volumeMounts:
             - name: persistent-storage
               mountPath: /data
+
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: password
+            - name: MONGO_HOST
+              value: "mongodb"
+            - name: MONGO_PORT
+              value: "27017"
 
       volumes:
         - name: persistent-storage
@@ -45,6 +61,7 @@ metadata:
 spec:
 
   ports:
-    - port: 6379
+    - port: 3000
+      targetPort: 3000
   selector:
     application/component: backend

@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongodb
+  labels:
+    app: mongodb
 spec:
   replicas: 1
   selector:
@@ -19,9 +21,33 @@ spec:
             - containerPort: 27017
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
-              value: <your_root_username>
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: username
             - name: MONGO_INITDB_ROOT_PASSWORD
-              value: <your_root_password>
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: password
+          volumeMounts:
+            - name: mongodb-storage
+              mountPath: /data/db
+      volumes:
+        - name: mongodb-storage
+          persistentVolumeClaim:
+            claimName: studymate-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: studymate-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
