@@ -21,10 +21,8 @@ import static com.studymate.apis.constansts.URLMappingConstants.VALIDATE_TOKEN;
 public class AuthenticationController {
 
     private static final Logger log = LogManager.getLogger(AuthenticationController.class);
-    @Value("${jwt.expiration}")
-    private long EXPIRATION ;
-    @Value("${jwt.secret}")
-    private String SECRET_KEY;
+    private long EXPIRATION = 900000000 ;
+    private String SECRET_KEY = "044561dc31ea927d424cf34c400e6c2433e6488aaa797f37a8a2a33c50303d91";
 
     @Autowired
     private AuthenticationService authenticationService;

@@ -4,3 +4,13 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+  server:
+    image: studymate-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/studyMate
+      SPRING_DATA_MONGODB_DATABASE: studymate
+

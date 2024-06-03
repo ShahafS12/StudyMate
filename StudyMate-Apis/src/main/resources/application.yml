@@ -1,8 +1,9 @@
 spring:
     data:
         mongodb:
-            uri: mongodb://localhost:27017/studyMate
-            database: studyMate
+            host: 51.4.0.22
+            port: 27017
+            database: studymate
 
 jwt:
     secret: "044561dc31ea927d424cf34c400e6c2433e6488aaa797f37a8a2a33c50303d91"
