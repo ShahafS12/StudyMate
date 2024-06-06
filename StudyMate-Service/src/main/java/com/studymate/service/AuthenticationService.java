@@ -86,9 +86,13 @@ public class AuthenticationService {
         }
     }
 
-    public String getUsernameFromToken(String token) {
+    public String getUsernameFromToken(String token) throws IllegalArgumentException {
+        if(token == null || !token.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+        String actualToken = token.substring(7);
         SecretKey signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
-        Claims claims = Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token).getPayload();
+        Claims claims = Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(actualToken).getPayload();
         return claims.getSubject();
     }
 }

@@ -52,6 +52,7 @@ public class UserController
     @GetMapping(URLMappingConstants.GET_USER)
     @ResponseBody
     public ResponseEntity<UserDto> GetUser(@RequestHeader("Authorization") String token,@PathVariable String username) {
+        log.info(authenticationService.getUsernameFromToken(token));
         if (authenticationService.validateToken(token)) {
             return userService.getUser(username);
         } else {
