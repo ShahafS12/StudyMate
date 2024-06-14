@@ -15,4 +15,5 @@ public interface GroupRepository extends MongoRepository<Group, String> {
     @Query(value = "{}", fields = "{'groupName': 1, '_id': 0}")
     List<String> findAllGroupNames();
 
+
 }

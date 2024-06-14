@@ -7,15 +7,15 @@ public class GroupDto {
     private String groupName;
     private String institute;
     private String curriculum;
-    private String groupAdmin;
+    private List<String> groupAdmins;
     private Date createdDate;
     private List<String> members;
 
-    public GroupDto(String groupName, String institute, String curriculum, String groupAdmin, List<String> members) {
+    public GroupDto(String groupName, String institute, String curriculum, List<String> groupAdmin, List<String> members) {
         this.groupName = groupName;
         this.institute = institute;
         this.curriculum = curriculum;
-        this.groupAdmin = groupAdmin;
+        this.groupAdmins = groupAdmin;
         this.members = members;
     }
 
@@ -25,8 +25,8 @@ public class GroupDto {
     public List<String> getMembers() {
         return this.members ;
     }
-    public void setGroupAdmin(String groupAdmin) {
-        this.groupAdmin = groupAdmin;
+    public void setGroupAdmins(List<String> groupAdmins) {
+        this.groupAdmins = groupAdmins;
     }
     public void setGroup(String groupName, String institute, String curriculum, Date CreatedDate , List<String> allUsers){
     setGroupName(groupName);
@@ -35,8 +35,8 @@ public class GroupDto {
     setCreatedDate(CreatedDate);
     setMembers(allUsers);
 }
-    public String getGroupAdmin() {
-        return groupAdmin;
+    public List<String> getGroupAdmins() {
+        return groupAdmins;
     }
     public String getGroupName() {
         return groupName;

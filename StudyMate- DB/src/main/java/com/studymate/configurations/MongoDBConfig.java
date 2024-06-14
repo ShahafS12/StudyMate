@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-
-
 import java.util.Collections;
 
 @Configuration

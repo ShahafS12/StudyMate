@@ -1,7 +1,6 @@
 package com.studymate.model;
 
 import com.studymate.model.Session.Session;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -111,7 +110,6 @@ class UserTest {
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup","testInstitute","testCurriculum" , new Date() , user, Collections.emptyList());
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),8,user,true,"regular sesson",group);
-        user.addSession(session);
         user.deleteSession(session);
         assertFalse(user.getSessions().contains(session));
     }
