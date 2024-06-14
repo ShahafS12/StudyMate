@@ -1,13 +1,12 @@
 package com.studymate.apis.controller;
 
+import com.studymate.apis.constansts.URLMappingConstants;
 import com.studymate.dtos.GroupDto;
 import com.studymate.dtos.NotificationDto;
+import com.studymate.dtos.SessionDto;
 import com.studymate.dtos.UserDto;
-import com.studymate.model.Notification;
 import com.studymate.service.AuthenticationService;
-import com.studymate.service.GroupService;
 import com.studymate.service.UserService;
-import com.studymate.apis.constansts.URLMappingConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +70,13 @@ public class UserController
     public ResponseEntity<List<GroupDto>> GetUserGroups(@PathVariable String username) {
         log.info("Getting user groups");
         return userService.getUserGroups(username);
+    }
+
+    @GetMapping(URLMappingConstants.GET_USER_SESSIONS)
+    @ResponseBody
+    public ResponseEntity<List<SessionDto>> GetUserSessions(@PathVariable String username) {
+        log.info("Getting user sessions");
+        return userService.getUserSessions(username);
     }
 
 }

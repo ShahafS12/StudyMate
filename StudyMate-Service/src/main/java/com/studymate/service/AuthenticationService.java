@@ -90,7 +90,7 @@ public class AuthenticationService {
     public String getUsernameFromToken(String token) {
         validateToken(token);
         SecretKey signingKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-        Claims claims = Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token).getPayload();
+        Claims claims = Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token.substring(7)).getPayload();
         return claims.getSubject();
     }
 }

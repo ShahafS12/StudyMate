@@ -47,7 +47,7 @@ public class GroupTest {
         User user2 = new User("JohnDoe2", "password123", "john.doe2@example.com", "Harvard", "Computer Science", "CS101", "male");
         Group group = new Group("testGroup", "testInstitute", "testCurriculum", new Date(), user, Collections.emptyList());
         group.addMember(user,user2);
-        group.deleteGroupByAdmin(user);
+        group.removeAllMembersByAdmin(user);
         assertTrue(group.isDeleted()==true);
     }
 

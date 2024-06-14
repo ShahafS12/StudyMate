@@ -26,7 +26,6 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-
     @PostMapping(URLMappingConstants.LOGIN)
     @ResponseBody
     public ResponseEntity<String> Login(@RequestBody UserDto userDto) {

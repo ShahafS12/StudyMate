@@ -8,14 +8,20 @@ import com.studymate.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.lang.model.element.UnknownAnnotationValueException;
+
+import static org.ietf.jgss.GSSException.UNAUTHORIZED;
 
 @RequestMapping(URLMappingConstants.SESSION)
 @RestController
 //@CrossOrigins(origins = "http://localhost:3000", allowCredentials = "true")
-public class SessionController
-{
+public class SessionController {
     private static final Logger log = LogManager.getLogger(GroupController.class);
     @Autowired
     private GroupService groupService;
@@ -33,59 +39,142 @@ public class SessionController
         return sessionService.getSession(id);
     }
 
+    @PostMapping(URLMappingConstants.CREATE_SESSION)
+    @ResponseBody
+    public ResponseEntity<String> createSession(@RequestHeader("Authorization") String token, @RequestBody SessionDto sessionDto) {
+        log.info("creating session");
+        if (authenticationService.validateToken(token))
+        {
+        return sessionService.createSession(authenticationService.getUsernameFromToken(token), sessionDto);
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        }
+    }
+
     @PostMapping(URLMappingConstants.ADD_USER_TO_SESSION)
     @ResponseBody
-    public ResponseEntity<String> addUserToSession(@RequestHeader("Authorization") String token,@PathVariable String id , @PathVariable String username) {
+    public ResponseEntity<String> addUserToSession(@RequestHeader("Authorization") String token, @PathVariable String sessionId, @PathVariable String username) {
         log.info("add user to session");
-        return sessionService.AdminAddUserToSession(id,authenticationService.getUsernameFromToken(token),
-                username);
+        if (authenticationService.validateToken(token)) {
+            return sessionService.AdminAddUserToSession(sessionId, authenticationService.getUsernameFromToken(token),
+                    username);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        }
     }
 
     @PostMapping(URLMappingConstants.USER_ADD_HIMSELF_TO_SESSION)
     @ResponseBody
-    public ResponseEntity<String> userAddHimselfToSession(@RequestHeader("Authorization") String token,@PathVariable String id) {
-        log.info("user added himself to session");
-        return sessionService.UserAddHimselfToSession(id,authenticationService.getUsernameFromToken(token));
+    public ResponseEntity<String> userAddHimselfToSession(@RequestHeader("Authorization") String token, @PathVariable String id) {
+        if (authenticationService.validateToken(token)) {
+            log.info("user added himself to session");
+            return sessionService.UserAddHimselfToSession(id, authenticationService.getUsernameFromToken(token));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        }
     }
 
     @PostMapping(URLMappingConstants.REMOVE_USER_FROM_SESSION)
     @ResponseBody
-    public ResponseEntity<String> removeUSerFromSession(@RequestHeader("Authorization") String token,@PathVariable String id , @PathVariable String username) {
-        log.info("remove user from session");
-        return sessionService.AdminRemoveUserFromSession(id,authenticationService.getUsernameFromToken(token),
-                username);
+    public ResponseEntity<String> removeUSerFromSession(@RequestHeader("Authorization") String token, @PathVariable("sessionId") String id, @PathVariable("username") String username) {
+        if (authenticationService.validateToken(token)) {
+            log.info("remove user from session");
+            return sessionService.AdminRemoveUserFromSession(id, authenticationService.getUsernameFromToken(token),
+                    username);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        }
+    }
+
+    @PostMapping(URLMappingConstants.USER_REMOVE_HIMSELF_FROM_SESSION)
+    @ResponseBody
+    public ResponseEntity<String> userRemoveHimselfFromSession(@RequestHeader("Authorization") String token, @PathVariable("sessionId") String id) {
+        log.info("user trying remove himself from session");
+        ResponseEntity<String> response;
+        if (authenticationService.validateToken(token)){
+
+            response= sessionService.UserRemoveHimselfToSession(id, authenticationService.getUsernameFromToken(token));
+        }
+        else
+        {
+            response= ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        }
+        return response;
     }
 
     @PostMapping(URLMappingConstants.SET_USER_AS_ADMIN_OF_SESSION)
     @ResponseBody
-    public ResponseEntity<String> AddUserToBeSessionAdmin(@RequestHeader("Authorization") String token,@PathVariable String id , @PathVariable String username) {
+    public ResponseEntity<String> AddUserToBeSessionAdmin(@RequestHeader("Authorization") String token, @PathVariable("sessionId") String id, @PathVariable("username") String username) {
         log.info("Adding user to group");
-         return sessionService.setUserAsAdminOfSession(id,authenticationService.getUsernameFromToken(token),
-                username);
+      ResponseEntity<String> response;
+        if (authenticationService.validateToken(token))
+        {
+            try
+            {
+                response= sessionService.setUserAsAdminOfSession(id, authenticationService.getUsernameFromToken(token),
+                    username);
+            }
+            catch (Exception e)
+            {
+                response = ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+        else
+        {
+            response = ResponseEntity.status(HttpStatusCode.valueOf(UNAUTHORIZED)).body("Authentication failed");
+        }
+        return response;
     }
 
     @PostMapping(URLMappingConstants.REMOVE_USER_FROM_ADMIN_OF_SESSION)
     @ResponseBody
-    public ResponseEntity<String> removeUserFromBeingAdminOfGroup(@RequestHeader("Authorization") String token, @PathVariable String id , @PathVariable String username) {
+    public ResponseEntity<String> removeUserFromBeingAdminOfGroup(@RequestHeader("Authorization") String token, @PathVariable("sessionId") String id, @PathVariable("username") String username) {
         log.info("remove user from being admin of sessoin");
-         return sessionService.removeUserFromAdminOfSession(id,authenticationService.getUsernameFromToken(token),
-                username);    }
+        ResponseEntity<String> response;
+        if (authenticationService.validateToken(token))
+        {
+            response= sessionService.removeUserFromAdminOfSession(id, authenticationService.getUsernameFromToken(token),
+                    username);
+        }
+        else
+        {
+            response = ResponseEntity.status(HttpStatusCode.valueOf(UNAUTHORIZED)).body("Authentication failed");
+        }
+        return response;
+    }
+
 
     @PostMapping(URLMappingConstants.DELETE_SESSION_BY_ADMIN)
     @ResponseBody
-    public ResponseEntity<String> deleteSessionByAdmin(@RequestHeader("Authorization") String token,@PathVariable String id ) {
+    public ResponseEntity<String> deleteSessionByAdmin(@RequestHeader("Authorization") String token, @PathVariable("sessionId") String id) {
         log.info("deleting session");
-         return sessionService.deleteSessionByAdmin(id,authenticationService.getUsernameFromToken(token));
+           ResponseEntity<String> response;
+        if (authenticationService.validateToken(token)) {
+            response = sessionService.deleteSessionByAdmin(id, authenticationService.getUsernameFromToken(token));
+        }
+        else
+        {
+            response = ResponseEntity.status(HttpStatusCode.valueOf(UNAUTHORIZED)).body("Authentication failed");
+        }
+        return response;
     }
 
     @PostMapping(URLMappingConstants.SET_MAX_PARTICIPANTS_FOR_SESSION)
     @ResponseBody
-    public ResponseEntity<String> setMAxParticipantsFroSession(@RequestHeader("Authorization") String token,@PathVariable String id ,@PathVariable String isLimited,@PathVariable String numberToLimit) {
+    public ResponseEntity<String> setMAxParticipantsFroSession(@RequestHeader("Authorization") String token, @PathVariable("sessionId") String id, @PathVariable("isLimited") String isLimited, @PathVariable("maxParticipants") String numberToLimit) {
         log.info("setting max participants for Session");
-            return sessionService.setMaxParticipants(id,authenticationService.getUsernameFromToken(token),
-                    isLimited,numberToLimit);
-
+        ResponseEntity<String> response;
+        if (authenticationService.validateToken(token)) {
+            response = sessionService.setMaxParticipants(id, authenticationService.getUsernameFromToken(token),
+                    isLimited, numberToLimit);
+        }
+        else
+        {
+            response = ResponseEntity.status(HttpStatusCode.valueOf(UNAUTHORIZED)).body("Authentication failed");
+        }
+        return response;
     }
-
 }
-

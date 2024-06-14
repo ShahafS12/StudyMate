@@ -1,7 +1,6 @@
 package com.studymate.model;
 
 import com.studymate.model.Session.Session;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
