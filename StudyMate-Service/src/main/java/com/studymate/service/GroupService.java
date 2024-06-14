@@ -25,12 +25,12 @@ public class GroupService {
     private static final Logger log = LogManager.getLogger(GroupService.class);
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-    private final SessionRepository sessioRepository;
+    private final SessionRepository sessiosRepository;
     @Autowired
     public GroupService(GroupRepository groupRepository, UserRepository userRepository, SessionRepository sessioRepository ) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
-        this.sessioRepository=sessioRepository;
+        this.sessiosRepository=sessioRepository;
     }
     public ResponseEntity<String> createGroup(String groupAdminStr ,String groupName, String institute, String curriculum,List<String> membersStr) {
         log.info("Creating group");

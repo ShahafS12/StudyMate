@@ -1,10 +1,6 @@
 package com.studymate.dtos;
-
-import org.bson.types.ObjectId;
-
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class SessionDto {
     private List<String> membersName;
@@ -34,10 +30,6 @@ public class SessionDto {
 
     public Date getCreatedDate() {
         return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
     }
 
     public int getMaxParticipants() {
