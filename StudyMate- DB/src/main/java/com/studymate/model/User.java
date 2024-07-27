@@ -93,9 +93,15 @@ public class User
         return groups.contains(group);
     }
     public void addGroup(Group group) throws IllegalArgumentException{
-        groups.add(group);
+        if (!groups.contains(group)) {
+               groups.add(group);
         log.info(String.format("User %s added to group %s", userName, group.getGroupName()));
-
+        }
+        else {
+            String message = String.format("User %s already in group %s", userName, group.getGroupName());
+            log.error(message);
+            throw new IllegalArgumentException(message);
+        }
     }
     public void addSession(Session session) {
         sessions.add(session);
