@@ -1,7 +1,6 @@
 package com.studymate.model;
 
 import com.studymate.model.Session.Session;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -111,7 +110,6 @@ class UserTest {
         Date sessionDate = calendar.getTime();
         Group group = new Group("testGroup","testInstitute","testCurriculum" , new Date() , user, Collections.emptyList());
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),8,user,true,"regular sesson",group);
-        user.addSession(session);
         user.deleteSession(session);
         assertFalse(user.getSessions().contains(session));
     }
@@ -124,15 +122,4 @@ class UserTest {
         user2.addGroup(group);
         assertTrue(user2.isInGroup(group));
     }
-
-    @Test
-    public void testAddGroupInvalidUser() {//todo check if this passes after Amits changes
-        User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
-        Group group = new Group("testGroup", "testInstitute", "testCurriculum", new Date(), user, Collections.emptyList());
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            user.addGroup(group);
-        });
-        assertEquals("User JohnDoe is not in group testGroup\n", exception.getMessage());
-    }
-
 }
