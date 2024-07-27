@@ -27,7 +27,7 @@ public class Group {
     @DBRef
     private List<User> groupAdmins;
     @DBRef
-    private List<User> members;
+    private List<User> members ;
     @DBRef
     private List<Session> sessions;
 
@@ -54,7 +54,8 @@ public class Group {
             {
                 members=new ArrayList<>();
             }
-            members.add(groupCreator);
+            this.members.add(groupCreator);
+            groupCreator.addGroup(this);
             groupAdmins.add(groupCreator);
             addMembers(members);
 

@@ -22,7 +22,6 @@ public class GroupController
     private static final Logger log = LogManager.getLogger(GroupController.class);
     @Autowired
     private GroupService groupService;
-
     @Autowired
     private AuthenticationService authenticationService;
 
