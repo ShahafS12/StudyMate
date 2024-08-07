@@ -1,9 +1,12 @@
 spring:
     data:
         mongodb:
-            host: 51.4.0.22
+            host: localhost #51.4.0.214
             port: 27017
-            database: studymate
+           # database: studymate
+           # username: studymate
+           # password: shaharamitshahaf
+
 
 jwt:
     secret: "044561dc31ea927d424cf34c400e6c2433e6488aaa797f37a8a2a33c50303d91"
