@@ -98,7 +98,7 @@ export const getUserNotifications = async (username, token) => {
 
 export const getGroups = async (token) => {
     try {
-        const response = await apiClient.get(`groups/allGroupNames`, {
+        const response = await apiClient.get(`group/allGroupNames`, {
             headers: {
           //      'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
             }
@@ -125,4 +125,20 @@ export const createGroup = async (group, token) => {
         console.error('Create group error:', error);
         throw error;
     }
+}
+
+export const getGroupByName = async (name) => {
+    try {
+        const decodedName = decodeURIComponent(name);
+        const response = await apiClient.get(`group/getGroup/${decodedName}`);
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get group by name' + name, error);
+        throw error;
+    }
+}
+
+export const getSessionsForGroup = async (name) => {
+
 }
