@@ -4,7 +4,7 @@ import {registerUser} from "./api/StudyMateApiService";
 
 export default function Register() {
     // State variables for form fields
-    const [errorMessage, setErrorMessage] = useState(false)
+    const [error, setErrorMessage] = useState(null)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -16,16 +16,46 @@ export default function Register() {
     const navigate = useNavigate();
 
     // Event handler for form submission
+    function checkValidity(user) {
+        if (!user.username) {
+            throw new Error('Username is required');
+        }
+        if (!user.password) {
+            throw new Error('Password is required');
+        }
+        if (!user.email) {
+            throw new Error('Email is required');
+        }
+        if (!user.college) {
+            throw new Error('College is required');
+        }
+        if (!user.degree) {
+            throw new Error('Degree is required');
+        }
+        if (!user.curriculum) {
+            throw new Error('Curriculum is required');
+        }
+        if (!user.gender) {
+            throw new Error('Gender is required');
+        }
+    }
+
+    // Event handler for form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Perform form validation
-        if (!username || !password || !email || !college || !degree  || !curriculum || !gender) {
-            setErrorMessage(true)
-            console.log('Please fill in all fields');
-            return;
-        }
-        // Send registration request if all fields are filled
+        const user = {
+            username,
+            password,
+            email,
+            college,
+            degree,
+            curriculum,
+            gender
+        };
+
         try {
+            checkValidity(user);
              const response = await registerUser(username, password, email, college, degree, curriculum, gender);
 
             // Handle successful registration
@@ -35,7 +65,7 @@ export default function Register() {
         } catch (error) {
             // Handle registration error
             console.error('Registration error:', error);
-            setErrorMessage(true)
+            setErrorMessage(error.message)
         }
     };
 
@@ -95,7 +125,7 @@ export default function Register() {
                                 <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Sign Up</button>
                             </form>
                         </div>
-                        {errorMessage && <div className="alert alert-danger">Please fill in all fields</div>}
+                        {error && <div className="alert alert-danger">{error}</div>}
 
                     </div>
                 </div>

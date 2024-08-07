@@ -8,35 +8,43 @@ export const useAuth = () => useContext(AuthContext)
 export default function AuthProvider(props) {
 
     const [isAuthenticated, setAuthenticated] = useState(false);
-    const [username, setUsername] = useState(null); // Add this line
+    const [username, setUsername] = useState(null);
+    const [token, setToken] = useState(null);
 
     async function login(username, password) {
         try {
-            const response =  await loginUser(username, password);
+            const response = await loginUser(username, password);
             if (response) {
                 setAuthenticated(true);
-                setUsername(username); // Add this line
+                setUsername(username);
+                setToken(response);
+                localStorage.setItem('username', username); // Store the username in localStorage
                 return true;
             } else {
                 setAuthenticated(false);
-                setUsername(null); // Add this line
+                setUsername(null);
+                setToken(null); // Clear the token
+                localStorage.removeItem('username'); // Remove the username from localStorage
                 return false;
             }
         } catch (error) {
             console.error('Failed to login:', error);
             setAuthenticated(false);
-            setUsername(null); // Add this line
+            setUsername(null);
+            setToken(null); // Clear the token
+            localStorage.removeItem('username'); // Remove the username from localStorage
             return false;
         }
     }
 
     function logout() {
         setAuthenticated(false);
-        setUsername(null); // Add this line
+        setUsername(null);
+        setToken(null); // Clear the token
     }
 
     return (
-        <AuthContext.Provider value={{isAuthenticated, login, logout, username}}>
+        <AuthContext.Provider value={{isAuthenticated, login, logout, username, token}}>
             {props.children}
         </AuthContext.Provider>
     );
