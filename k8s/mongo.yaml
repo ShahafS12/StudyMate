@@ -33,10 +33,15 @@ spec:
           volumeMounts:
             - name: mongodb-storage
               mountPath: /data/db
+            - name: mongo-config
+              mountPath: /docker-entrypoint-initdb.d/
       volumes:
         - name: mongodb-storage
           persistentVolumeClaim:
             claimName: studymate-pvc
+        - name: mongo-config
+          configMap:
+            name: mongo-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -60,4 +65,17 @@ spec:
     - name: mongodb
       port: 27017
       targetPort: 27017
-  type: ClusterIP
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config
+data:
+  mongo-init.js: |
+    var db = db.getSiblingDB('studymate');
+    try {
+        db.auth('studymate', 'shaharamitshahaf');
+    } catch (error) {
+        db.createUser({user: "studymate", pwd: "shaharamitshahaf", roles: ["readWrite"]});
+    }

@@ -1,6 +1,6 @@
 FROM openjdk:17
 
-WORKDIR /StudyMate2
+WORKDIR /StudyMate
 
 COPY StudyMate-Apis/target/StudyMate-Apis-1.0.jar ./StudyMate-Apis-1.0.jar
 

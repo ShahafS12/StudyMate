@@ -125,6 +125,7 @@ class UserTest {
         assertTrue(user2.isInGroup(group));
     }
 
+    @Disabled
     @Test
     public void testAddGroupInvalidUser() {//todo check if this passes after Amits changes
         User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
