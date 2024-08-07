@@ -22,6 +22,7 @@
             <artifactId>spring-context</artifactId>
             <version>6.1.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.project</groupId>
             <artifactId>StudyMate-Service</artifactId>

@@ -2,8 +2,10 @@ package com.studymate.model;
 import com.studymate.model.Session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -11,11 +13,14 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Document(collection = "users")
 public class User
 {
     private static final Logger log = LogManager.getLogger(Group.class);
+    @Id
+    ObjectId id;
     @Indexed(unique = true)
     private String userName;
     private String password;
@@ -25,7 +30,9 @@ public class User
     private String curriculum;
     private String memberSince;
     private List<Notification> notifications; //todo check if we need to create notifications class to include link to relevant object,date,viewed etc
+    @DBRef(lazy = false)
     private List<Session> sessions;
+    @DBRef(lazy = false)
     private List<Group> groups;
     private String gender;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -38,6 +45,7 @@ public class User
             log.error(errorMsg);
             throw new IllegalArgumentException(errorMsg);
         }
+        id=new ObjectId();
         this.userName = userName;
         this.memberSince = Instant.now().atZone(ZoneId.systemDefault()).format(formatter);
         this.password = password;
@@ -86,10 +94,8 @@ public class User
     }
     public void addGroup(Group group) throws IllegalArgumentException{
         if (!groups.contains(group)) {
-            groups.add(group);
-            if(!group.isMember(this))
-                group.addMember(this);
-            log.info(String.format("User %s added to group %s", userName, group.getGroupName()));
+               groups.add(group);
+        log.info(String.format("User %s added to group %s", userName, group.getGroupName()));
         }
         else {
             String message = String.format("User %s already in group %s", userName, group.getGroupName());
@@ -105,10 +111,27 @@ public class User
             sessions.remove(session);
         }
         else {
-            String message = String.format("User %s tried to delete session %s that they are not in", userName, session.getId());
+            String message = String.format("User %s tried to delete session %s that they are not in", userName, session.getSessionId());
             log.error(message);
             throw new IllegalArgumentException(message);
         }
+    }
+    public void deleteGroup(Group group) throws IllegalArgumentException {
+        if (groups.contains(group)) {
+            groups.remove(group);
+        }
+        else {
+            String message = String.format("User %s tried to delete group %s that they are not in", userName, group.getGroupName());
+            log.error(message);
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User otherUser = (User) o;
+        return Objects.equals(this.userName, otherUser.userName);
     }
 
     //create getters
@@ -133,6 +156,7 @@ public class User
     public List<Session> getSessions() {
         return sessions;
     }
+    public boolean checkIfUserIsInSession(Session session){return sessions.contains(session);}
     public List<Group> getGroups() {
         return groups;
     }
@@ -141,5 +165,8 @@ public class User
     }
 
 
+    public ObjectId id() {
+        return id;
+    }
 
 }

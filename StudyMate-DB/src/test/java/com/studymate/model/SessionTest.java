@@ -1,11 +1,12 @@
 package com.studymate.model;
 
-import com.studymate.model.Group;
 import com.studymate.model.Session.Session;
-import com.studymate.model.User;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,12 +35,11 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),8,user,true,"regular sesson",group);
-        String expected = String.format("Participant %s is already in session %s", user.getUserName(), session.getId().toString());
+        String expected = String.format("Participant %s is already in session %s", user.getUserName(), session.getSessionId().toString());
 
         try {
-            session.addParticipant(user,user);
+            session.AdminAddParticipant(user,user);
             fail("Expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {
@@ -56,9 +56,9 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(2021);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-        group.addMember(user2);
+        group.addMember(user,user2);
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),8,user,true,"regular sesson",group);
-        session.addParticipant(user,user2);
+        session.AdminAddParticipant(user,user2);
         assertTrue(session.getParticipants().contains(user2));
     }
     @Test
@@ -108,10 +108,10 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(100);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-        group.addMember(user2);
+        group.addMember(user,user2);
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),1,user,true,"regular sesson",group);
         try {
-            session.addParticipant(user,user2);
+            session.AdminAddParticipant(user,user2);
             fail("Expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {
@@ -129,10 +129,10 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(100);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-        group.addMember(user2);
+        group.addMember(user,user2);
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),1,user,false,"regular sesson",group);
         try {
-            session.addParticipant(user,user2);
+            session.AdminAddParticipant(user,user2);
             session.removeParticipantByAdmin(user,user2);
             assertTrue(!session.getParticipants().contains(user2));
 
@@ -152,10 +152,10 @@ class SessionTest
         Date groupCreatedDate = new Date();
         groupCreatedDate.setYear(100);
         Group group = new Group("testGroup","testInstitute","testCurriculum" , groupCreatedDate ,user, Collections.emptyList());
-        group.addMember(user2);
+        group.addMember(user,user2);
         Session session = new Session(sessionDate,"MTA Libary", new ArrayList<>(),1,user,false,"regular sesson",group);
         try {
-            session.addParticipant(user,user2);
+            session.AdminAddParticipant(user,user2);
             session.removeParticipantByAdmin(user,user2);
             session.removeParticipantByAdmin(user,user);
 
