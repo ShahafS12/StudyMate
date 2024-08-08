@@ -19,13 +19,13 @@ spec:
     spec:
       containers:
         - name: studymate-frontend
-          image: ghcr.io/shahafs12/studymate-client:1.0
+          image: ghcr.io/shahafs12/studymate-client:2.2
           ports:
             - containerPort: 3000
           imagePullPolicy: Always
           env:
             - name: REACT_APP_API_BASE_URL
-              value: "http://studymate-backend:8080/"
+              value: "http://51.4.1.163:8080/"
 
 ---
 apiVersion: v1

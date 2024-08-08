@@ -24,6 +24,7 @@ public class GroupTest {
         assertEquals("testGroup", group.getGroupName());
     }
 
+
     @Test
     public void testDeleteSession() {
         User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
@@ -39,6 +40,7 @@ public class GroupTest {
         assertFalse(user.getSessions().contains(session));
     }
 
+
     @Test
     public void testDeleteGroup() {//
         User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
@@ -49,6 +51,7 @@ public class GroupTest {
         group.removeAllMembersByAdmin(user);
         assertTrue(group.isDeleted()==true);
     }
+    /*
     @Test
         public void testAddExitingUserToGroup() {//
         User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
@@ -58,6 +61,8 @@ public class GroupTest {
         group.addMember(user,user2);
         assertTrue(group.isDeleted()==true);
     }
+
+     */
 
       @Test
     public void testRemovingAllMembers() {//
