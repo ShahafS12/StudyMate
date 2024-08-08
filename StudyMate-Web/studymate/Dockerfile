@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-ENV REACT_APP_API_BASE_URL=http://studymate-backend:8080/
+ENV REACT_APP_API_BASE_URL=http://51.4.1.163:8080/
 RUN npm run build
 
 # Run stage

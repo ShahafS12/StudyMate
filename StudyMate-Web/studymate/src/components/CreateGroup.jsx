@@ -15,7 +15,7 @@ export default function CreateGroup() {
 
     function checkValidity(group) {
         if (!group.groupName) {
-            throw new Error('Group name is required');
+            throw new Error('AllGroups name is required');
         }
         if (!group.institute) {
             throw new Error('Institute is required');
@@ -31,7 +31,7 @@ export default function CreateGroup() {
             groupName: groupName,
             institute: institute,
             curriculum: curriculum,
-            groupAdmin: username,
+            groupAdmin: [username],
             members: [username]
         };
 

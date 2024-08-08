@@ -11,8 +11,9 @@ import Register from "./Register";
 import HomePage from "./HomePage";
 import GroupsPerUser from "./GroupsPerUser";
 import SessionsPerUser from "./SessionsPerUser";
-import Group from "./Group";
+import AllGroups from "./AllGroups";
 import CreateGroup from "./CreateGroup";
+import Group from "./Group";
 
 function AuthenticatedRoute({children}) {
     const authContext = useAuth()
@@ -36,8 +37,8 @@ export default function StudyMate() {
                         <Route path='/login' element={ <Login /> }></Route>
                         <Route path='/register' element={ <Register /> }></Route>
                         <Route path='/home' element={ <HomePage /> }></Route>
-                        <Route path='/groups' element={ <Group /> }></Route>
-                        <Route path='/groups:groupname' element={ <Group /> }></Route>
+                        <Route path='/groups' element={ <AllGroups /> }></Route>
+                        <Route path="/group/:groupName" element={<Group />} /> {/* Route for group details */}
 
 
 

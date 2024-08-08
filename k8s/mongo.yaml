@@ -65,7 +65,7 @@ spec:
     - name: mongodb
       port: 27017
       targetPort: 27017
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: ConfigMap

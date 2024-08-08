@@ -20,32 +20,20 @@ spec:
     spec:
       containers:
         - name: studymate
-          image: ghcr.io/shahafs12/studymate-app:1.0
+          image: ghcr.io/shahafs12/studymate-app:2.6
           imagePullPolicy: Always
 
           ports:
             - containerPort: 8080
 
-          volumeMounts:
-            - name: persistent-storage
-              mountPath: /data
+     #     volumeMounts:
+      #      - name: persistent-storage
+       #       mountPath: /data
 
-#          env:
-#            - name: MONGO_INITDB_ROOT_USERNAME
-#              valueFrom:
-#                secretKeyRef:
-#                  name: mongo-secret
-#                  key: username
-#            - name: MONGO_INITDB_ROOT_PASSWORD
-#              valueFrom:
-#                secretKeyRef:
-#                  name: mongo-secret
-#                  key: password
-
-      volumes:
-        - name: persistent-storage
-          persistentVolumeClaim:
-            claimName: studymate-pvc
+   #   volumes:
+    #    - name: persistent-storage
+     #     persistentVolumeClaim:
+      #      claimName: studymate-pvc
 
 ---
 apiVersion: v1
