@@ -14,6 +14,7 @@ public interface UserRepository extends MongoRepository<User, String> {
     List<User> findMembersByUserName(@Param("username") List<String> members);
     @Query(value = "{}", fields = "{'userName': 1, '_id': 0}")
     List<String> findAllUserNames();
+    List<User> findByUserNameContainingIgnoreCase(String userName);
     User findByEmail(@Param("email") String email);
     User findByUserNameAndPassword(@Param("username") String username, @Param("password") String password);
     void deleteByUserName(@Param("username") String username);
