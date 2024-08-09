@@ -58,6 +58,13 @@ public class UserController
         }
     }
 
+    @GetMapping(URLMappingConstants.IS_IN_GROUP)
+    @ResponseBody
+    public boolean IsInGroup(@PathVariable String username, @PathVariable String groupName) {
+        log.info("Checking if user is in group");
+        return userService.isInGroup(username, groupName);
+    }
+
     @GetMapping(URLMappingConstants.GET_USER_NOTIFICATIONS)
     @ResponseBody
     public ResponseEntity<List<NotificationDto>> GetUserNotifications(@PathVariable String username) {

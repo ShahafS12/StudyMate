@@ -139,4 +139,21 @@ public class UserService {
       }
       return ResponseEntity.ok(null);
     }
+
+    public boolean isInGroup(String username, String groupName) {
+        log.info("Checking if user is in group");
+        User user = userRepository.findByUserName(username);
+        if(user == null) {
+            log.error("User not found");
+            return false;
+        }
+        for(Group group : user.getGroups()) {
+            if(group.getGroupName().equals(groupName)) {
+                log.info("User is in group");
+                return true;
+            }
+        }
+        log.info("User is not in group");
+        return false;
+    }
 }
