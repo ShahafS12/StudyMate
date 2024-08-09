@@ -1,6 +1,7 @@
 package com.studymate.repositories;
 
 import com.studymate.model.Group;
+import com.studymate.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,7 @@ public interface GroupRepository extends MongoRepository<Group, String> {
     void deleteByGroupName(String groupName);
     @Query(value = "{}", fields = "{'groupName': 1, '_id': 0}")
     List<String> findAllGroupNames();
+    List<Group> findByGroupNameContainingIgnoreCase(String groupName);
 
 
 }

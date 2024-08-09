@@ -43,4 +43,8 @@ public class URLMappingConstants
     public static final String LOGIN = "/login";
     public static final String VALIDATE_TOKEN = "/validate";
 
+    //Search bar
+    public static final String SEARCH_BAR = "/search";
+
+
 }
