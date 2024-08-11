@@ -36,7 +36,6 @@ export default function Login() {
         try {
             checkValidity(user);
             const loginSuccessful = await authContext.login(username, password);
-            console.log('Login successful:', loginSuccessful);
             if (loginSuccessful) {
                 navigate(`/profile/${username}`);
             } else {

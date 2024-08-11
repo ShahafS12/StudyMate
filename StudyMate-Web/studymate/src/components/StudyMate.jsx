@@ -14,6 +14,7 @@ import SessionsPerUser from "./SessionsPerUser";
 import AllGroups from "./AllGroups";
 import CreateGroup from "./CreateGroup";
 import Group from "./Group";
+import CreateSession from "./CreateSession";
 
 function AuthenticatedRoute({children}) {
     const authContext = useAuth()
@@ -51,6 +52,11 @@ export default function StudyMate() {
                         <Route path='/create-group' element={
                             <AuthenticatedRoute>
                                 <CreateGroup  />
+                            </AuthenticatedRoute>}>
+                        </Route>
+                        <Route path='/create-session/:groupName' element={
+                            <AuthenticatedRoute>
+                                <CreateSession  />
                             </AuthenticatedRoute>}>
                         </Route>
                         <Route path='/logout' element={

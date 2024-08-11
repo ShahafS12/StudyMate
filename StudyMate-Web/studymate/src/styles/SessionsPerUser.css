@@ -15,3 +15,27 @@
     width: 80%; /* Adjust as needed */
     height: 80%; /* Adjust as needed */
 }
+
+/* SessionsPerUser.css */
+
+.highlight {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+}
+
+.session-details-container {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.session-details {
+    margin-bottom: 10px;
+}
+
+.session-details p {
+    margin: 0;
+    padding: 2px 0;
+}

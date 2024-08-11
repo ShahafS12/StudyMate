@@ -48,3 +48,37 @@
         padding: 0;
     }
 }
+
+/* Group.css */
+
+.highlight {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+}
+
+.session-details-container {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.session-details {
+    margin-bottom: 10px;
+}
+
+.session-details p {
+    margin: 0;
+    padding: 2px 0;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}

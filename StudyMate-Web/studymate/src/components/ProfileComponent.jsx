@@ -27,7 +27,7 @@ export default function ProfileComponent() {
                 <div className="col-md-6">
                     <div className="card">
                         <div className="card-header username">
-                            <h1>Welcome {username} !</h1>
+                            <h1>{username}</h1>
                         </div>
                         <div className="card-body">
                             {/* Display the user details */}

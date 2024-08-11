@@ -12,7 +12,6 @@ export default function GroupsPerUser() {
         // Make an API call to fetch the groups that the user is a member of
         getGroupsForUser(username, token)
             .then(response => {
-                console.log('API response:', response);
                 // Update the state variable with the fetched groups
                 setGroups(response);
             })

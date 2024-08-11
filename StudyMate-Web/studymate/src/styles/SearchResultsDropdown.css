@@ -1,0 +1,53 @@
+.search-bar-container {
+    position: relative; /* Ensures the dropdown is positioned relative to the search bar */
+}
+
+.search-results-dropdown {
+    position: absolute;
+    top: 100%; /* Position the dropdown directly below the search bar */
+    left: 0; /* Align it to the left of the search bar */
+    width: 100%; /* Make it the same width as the search bar */
+    max-height: 200px; /* Limit the height of the dropdown */
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-y: auto; /* Adds scroll if content exceeds max height */
+}
+
+.search-results-dropdown h5 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: blue;
+    font-weight: bold;
+}
+
+.search-results-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-results-dropdown li {
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+.search-results-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.search-results-dropdown li a {
+    text-decoration: none; /* Remove underline from links */
+    color: black; /* Set link text color to black */
+}
+
+.search-results-dropdown li a:visited,
+.search-results-dropdown li a:active,
+.search-results-dropdown li a:hover {
+    text-decoration: none; /* Remove underline */
+    color: black; /* Keep text color black */
+}
