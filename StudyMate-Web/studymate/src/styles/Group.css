@@ -1,5 +1,3 @@
-/* Add this to your Group.css file */
-
 .card {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -32,53 +30,14 @@
     padding-right: 1rem;
 }
 
-.calendar-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 1rem;
-}
-
+/* Responsive Design for Group component */
 @media (max-width: 768px) {
     .d-flex {
         flex-direction: column;
     }
 
-    .group-details, .calendar-container {
+    .group-details,
+    .calendar-container {
         padding: 0;
     }
-}
-
-/* Group.css */
-
-.highlight {
-    background-color: #007bff;
-    color: white;
-    border-radius: 50%;
-}
-
-.session-details-container {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-}
-
-.session-details {
-    margin-bottom: 10px;
-}
-
-.session-details p {
-    margin: 0;
-    padding: 2px 0;
-}
-
-.btn-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
 }

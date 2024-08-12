@@ -185,7 +185,11 @@ export const getSessionsForGroup = async (groupName) => {
 
 export const exitSession = async (token, sessionId) => {
     try {
-        const response = await apiClient.post(`session/removeMyselfFromSession/${sessionId}"`, {});
+        const response = await apiClient.post(`session/removeMyselfFromSession/${sessionId}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+            }
+        });
         return response.data;
     }
     catch (error) {
@@ -196,7 +200,11 @@ export const exitSession = async (token, sessionId) => {
 
 export const joinSession = async (token, sessionId) => {
     try {
-        const response = await apiClient.post(`session/addMyselfToSession/${sessionId}`, {});
+        const response = await apiClient.post(`session/addMyselfToSession/${sessionId}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+            }
+        });
         return response.data;
     }
     catch (error) {
