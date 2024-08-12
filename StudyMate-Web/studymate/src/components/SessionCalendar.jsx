@@ -2,26 +2,29 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/SessionCalendar.css';
-import {useAuth} from "./security/AuthContext"; // Create a new CSS file or reuse existing styles
+import { useAuth } from "./security/AuthContext";
 
 export default function SessionCalendar({ fetchSessions, isMember, onSessionAction }) {
-    const {username} = useAuth()
+    const { username } = useAuth();
     const [sessions, setSessions] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSessions, setSelectedSessions] = useState([]);
 
     useEffect(() => {
-        fetchSessions()
-            .then(response => {
+        const loadSessions = async () => {
+            try {
+                const response = await fetchSessions();
                 setSessions(response);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Failed to fetch sessions:', error);
-            });
+            }
+        };
+
+        loadSessions();
     }, [fetchSessions]);
 
     const getSessionsForDate = (date) => {
-        const dateStr = date.toISOString().split('T')[0]; // Get the date in YYYY-MM-DD format
+        const dateStr = date.toISOString().split('T')[0];
         return sessions.filter(session => session.sessionDate.startsWith(dateStr));
     };
 
@@ -40,9 +43,23 @@ export default function SessionCalendar({ fetchSessions, isMember, onSessionActi
         return getSessionsForDate(date).length > 0;
     };
 
-    const onDeleteSession = (sessionId) => {
+    const isUserAdmin = (adminsName) => {
+        return adminsName.includes(username);
+    };
 
-    }
+    const handleSessionAction = async (sessionId, action) => {
+        try {
+            await onSessionAction(sessionId, action);
+            // Re-fetch sessions to get updated list
+            const updatedSessions = await fetchSessions();
+            setSessions(updatedSessions);
+            // Optionally clear selected sessions and date
+            setSelectedDate(null);
+            setSelectedSessions([]);
+        } catch (error) {
+            console.error(`Failed to ${action} session:`, error);
+        }
+    };
 
     return (
         <div className="calendar-container">
@@ -50,7 +67,7 @@ export default function SessionCalendar({ fetchSessions, isMember, onSessionActi
                 onClickDay={handleDateClick}
                 tileClassName={({ date, view }) => {
                     if (view === 'month' && isDateWithSession(date)) {
-                        return 'highlight'; // Add a special class if the date has sessions
+                        return 'highlight';
                     }
                     return null;
                 }}
@@ -64,15 +81,24 @@ export default function SessionCalendar({ fetchSessions, isMember, onSessionActi
                             <p><strong>Location:</strong> {session.location}</p>
                             <p><strong>Description:</strong> {session.description}</p>
                             {isMember && onSessionAction && (
-                                <button
-                                    className={`btn ${session.membersName.includes(username) ? 'btn-danger' : 'btn-success'}`}
-                                    onClick={() => onSessionAction(session.id, session.membersName.includes(username) ? 'exit' : 'join')}
-                                >
-                                    {session.membersName.includes(username) ? 'Exit Session' : 'Join Session'}
-                                </button>
-
+                                <>
+                                    {isUserAdmin(session.adminsName) ? (
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() => handleSessionAction(session.id, 'delete')}
+                                        >
+                                            Delete Session
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className={`btn ${session.membersName.includes(username) ? 'btn-danger' : 'btn-success'}`}
+                                            onClick={() => handleSessionAction(session.id, session.membersName.includes(username) ? 'exit' : 'join')}
+                                        >
+                                            {session.membersName.includes(username) ? 'Exit Session' : 'Join Session'}
+                                        </button>
+                                    )}
+                                </>
                             )}
-
                         </div>
                     ))}
                 </div>

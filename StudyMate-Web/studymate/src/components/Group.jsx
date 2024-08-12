@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     getGroupByName,
@@ -6,14 +6,16 @@ import {
     getSessionsForGroup,
     joinSession,
     exitSession,
+    deleteSession,
     joinGroup,
-    exitGroup
+    exitGroup,
+    deleteGroup
 } from './api/StudyMateApiService';
 import { useAuth } from './security/AuthContext';
-import SessionCalendar from './SessionCalendar'; // Import the new component
+import SessionCalendar from './SessionCalendar';
 import '../styles/Group.css';
 
-export default function Group() {
+export default function Group({ onGroupDeleted }) {
     const { groupName } = useParams();
     const [group, setGroup] = useState(null);
     const [isMember, setIsMember] = useState(false);
@@ -21,7 +23,7 @@ export default function Group() {
     const navigate = useNavigate();
     const { username, token } = useAuth();
 
-    useEffect(() => {
+    const fetchGroupDetails = useCallback(() => {
         if (!groupName) return;
 
         const decodedGroupName = decodeURIComponent(groupName);
@@ -34,13 +36,16 @@ export default function Group() {
                     isUserMemberInGroup(username, decodedGroupName, token)
                         .then(isMember => {
                             setIsMember(isMember);
-                            // Optionally fetch joined sessions here
                         })
                         .catch(error => console.error('Failed to check membership:', error));
                 }
             })
             .catch(error => console.error('Failed to fetch group details:', error));
     }, [groupName, username, token]);
+
+    useEffect(() => {
+        fetchGroupDetails();
+    }, [fetchGroupDetails]);
 
     const handleCreateSessionClick = () => {
         if (group?.groupName) {
@@ -60,6 +65,8 @@ export default function Group() {
                     newSet.delete(sessionId);
                     return newSet;
                 });
+            } else if (action === 'delete') {
+                await deleteSession(token, sessionId);
             }
         } catch (error) {
             console.error(`Failed to ${action} session:`, error);
@@ -75,14 +82,31 @@ export default function Group() {
                 await exitGroup(token, group.groupName, username);
                 setIsMember(false);
             }
+            fetchGroupDetails(); // Refresh group details after join/exit
         } catch (error) {
             console.error(`Failed to ${action} group:`, error);
+        }
+    };
+
+    const handleDeleteGroup = async () => {
+        try {
+            if (group?.groupName) {
+                await deleteGroup(token, group.groupName);
+                if (onGroupDeleted) {
+                    onGroupDeleted(); // Notify parent component
+                }
+                navigate('/groups'); // Redirect after deletion
+            }
+        } catch (error) {
+            console.error('Failed to delete group:', error);
         }
     };
 
     if (!group) {
         return <p>Loading group details...</p>;
     }
+
+    const isOnlyAdmin = group.groupAdmins.length === 1 && group.groupAdmins.includes(username);
 
     return (
         <div className="container mt-5">
@@ -105,12 +129,20 @@ export default function Group() {
                                             Create New Session
                                         </button>
                                     )}
-                                    {username && (
+                                    {username && !isOnlyAdmin && (
                                         <button
                                             className={`btn ${isMember ? 'btn-danger' : 'btn-success'} mt-3`}
                                             onClick={() => handleJoinExitGroup(isMember ? 'exit' : 'join')}
                                         >
                                             {isMember ? 'Exit Group' : 'Join Group'}
+                                        </button>
+                                    )}
+                                    {username && group.groupAdmins.includes(username) && (
+                                        <button
+                                            className="btn btn-danger mt-3"
+                                            onClick={handleDeleteGroup}
+                                        >
+                                            Delete Group
                                         </button>
                                     )}
                                 </div>
@@ -119,6 +151,7 @@ export default function Group() {
                                         fetchSessions={() => getSessionsForGroup(group.groupName, token)}
                                         isMember={isMember}
                                         onSessionAction={handleJoinExitSession}
+                                        redirectPath={`/group/${group.groupName}`}  // Redirect after deletion
                                     />
                                 </div>
                             </div>

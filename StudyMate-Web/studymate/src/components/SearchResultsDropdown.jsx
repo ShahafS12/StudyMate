@@ -36,6 +36,9 @@ export default function SearchResultsDropdown({ searchResults, onResultClick }) 
                     </ul>
                 </>
             )}
+            {users.length === 0 && groups.length === 0 && (
+                <p>No results found</p>
+            )}
         </div>
     );
 }

@@ -142,7 +142,6 @@ export const getGroupByName = async (name) => {
 
 export const createSession = async (session, token) => {
     try {
-        console.log(session);
         const response = await apiClient.post('/session/createSession', session, {
             headers: {
                 Authorization: `Bearer ${token}`, // Send the token in the Authorization header
@@ -213,6 +212,21 @@ export const joinSession = async (token, sessionId) => {
     }
 }
 
+export const deleteSession = async (token, sessionId) => {
+    try {
+        const response = await apiClient.post(`session/deleteSessionByAdmin/${sessionId}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Delete sessions error:', error);
+        throw error;
+    }
+}
+
 export const joinGroup = async (token, groupName, userName) => {
     try {
         const response = await apiClient.post(
@@ -249,6 +263,25 @@ export const exitGroup = async (token, groupName, userName) => {
     }
 };
 
+export const deleteGroup = async (token, groupName) => {
+    try {
+        const response = await apiClient.post(
+            `group/deleteGroupByAdmin/${groupName}`,
+            {}, // An empty body if your endpoint doesn't expect a request payload
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting group:', error);
+        throw error;
+    }
+};
+
+
 export const search = async (queryWord) => {
     try {
         const response = await apiClient.get(`/search?query=${queryWord}`);
@@ -259,3 +292,18 @@ export const search = async (queryWord) => {
         throw error;
     }
 }
+
+export const validateToken = async (token) => {
+    try {
+        const response = await apiClient.get('/auth/validate', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        // Server returns plain text, so check for "Valid token"
+        return response.data === "Valid token";
+    } catch (error) {
+        console.error('Token validation failed:', error);
+        return false;
+    }
+};
