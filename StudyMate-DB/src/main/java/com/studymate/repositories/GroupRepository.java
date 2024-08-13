@@ -11,10 +11,12 @@ import java.util.List;
 
 @Repository
 public interface GroupRepository extends MongoRepository<Group, String> {
+    @Query(value = "{'groupName': ?0, 'isDeleted': false}")
     Group findByGroupName(@Param("groupName") String groupName);
     void deleteByGroupName(String groupName);
-    @Query(value = "{}", fields = "{'groupName': 1, '_id': 0}")
+    @Query(value = "{'isDeleted': false}", fields = "{'groupName': 1, '_id': 0}")
     List<String> findAllGroupNames();
+    @Query(value = "{'groupName': { $regex: ?0, $options: 'i' }, 'isDeleted': false}")
     List<Group> findByGroupNameContainingIgnoreCase(String groupName);
 
 

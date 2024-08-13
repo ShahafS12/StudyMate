@@ -91,7 +91,7 @@ public class Group {
         }
     }
     public void addMember(User adminCandidate,User user) throws IllegalArgumentException {
-        if (checkIfUserIsAdmin(adminCandidate)) {
+        if (checkIfUserIsAdmin(adminCandidate) || adminCandidate.equals(user)) {
             if (checkIfUserIsMember(user)) {
                 String message = String.format("User '%s' is already a member of the group", user.getUserName());
                 log.error(message);
@@ -109,7 +109,7 @@ public class Group {
         }
         }
     public void removeMemberByAdmin(User adminCandidate, User user) throws IllegalArgumentException {
-        if (checkIfUserIsAdmin(adminCandidate))
+        if (checkIfUserIsAdmin(adminCandidate) || adminCandidate.equals(user))
         {
         removeMember(user);
         }

@@ -84,17 +84,37 @@ public class UserService {
 
     public ResponseEntity<List<GroupDto>> getUserGroups(String username) {
         log.info("Getting user groups");
+
+        // Fetch user by username
         User user = userRepository.findByUserName(username);
         responseInCaseOfUserNotFound(user);
+
+        // Get groups and handle null case
         List<Group> groups = user.getGroups();
-        List<GroupDto> groupDto = new ArrayList<>();
-        for(Group group : groups) {
-            groupDto.add(new GroupDto(group.getGroupName(), group.getInstitute(), group.getCurriculum(),
-                    group.getAdminsNames(), group.getMembersNames()));
+        if (groups == null) {
+            groups = new ArrayList<>(); // Initialize to an empty list to avoid NullPointerException
         }
+
+        // Convert Group entities to GroupDto
+        List<GroupDto> groupDto = new ArrayList<>();
+        for (Group group : groups) {
+            if (group != null) { // Additional null check in case there are null elements in the list
+                groupDto.add(new GroupDto(
+                        group.getGroupName(),
+                        group.getInstitute(),
+                        group.getCurriculum(),
+                        group.getAdminsNames(),
+                        group.getMembersNames()
+                ));
+            } else {
+                log.warn("Encountered a null group in the user's group list");
+            }
+        }
+
         log.info("User groups retrieved successfully");
         return ResponseEntity.ok(groupDto);
     }
+
 
     public ResponseEntity<List<NotificationDto>> getUserNotifications(String username) {
         log.info("Getting user notifications");

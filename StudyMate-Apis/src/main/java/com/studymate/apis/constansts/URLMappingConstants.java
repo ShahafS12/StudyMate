@@ -29,7 +29,7 @@ public class URLMappingConstants
     public static final String SESSION = "/session";
     public static final String CREATE_SESSION = "/createSession";
     public static final String GET_SESSION = "/getSession/{sessionId}";
-    public static final String ADD_USER_TO_SESSION = "/addUserToSession/{sessionId}/{username}";
+    public static final String ADD_USER_TO_SESSION = "/addUserToSession/{sessionId}";
     public static final String USER_ADD_HIMSELF_TO_SESSION = "/addMyselfToSession/{sessionId}";
     public static final String REMOVE_USER_FROM_SESSION = "/removeUserFromSession/{sessionId}/{username}";
     public static final String USER_REMOVE_HIMSELF_FROM_SESSION = "/removeMyselfFromSession/{sessionId}";

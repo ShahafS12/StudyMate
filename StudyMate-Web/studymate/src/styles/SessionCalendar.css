@@ -1,0 +1,104 @@
+/* Calendar Styles */
+
+.calendar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    height: 100%; /* Adjust as needed */
+}
+
+.calendar-container .react-calendar {
+    width: 80%; /* Adjust as needed */
+    height: 80%; /* Adjust as needed */
+}
+
+/* Highlighted Dates */
+.highlight {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+}
+
+/* Session Details */
+.session-details-container {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    margin-top: 1rem;
+}
+
+.session-details {
+    margin-bottom: 10px;
+}
+
+.session-details p {
+    margin: 0;
+    padding: 2px 0;
+}
+
+/* Buttons */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Card Styles (used in Group component) */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-md-row {
+    flex-direction: row;
+}
+
+/* Specific to Group component */
+.group-details {
+    padding-right: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column;
+    }
+
+    .group-details,
+    .calendar-container {
+        padding: 0;
+    }
+}
+
+/* Session Title (Specific to SessionsPerUser component) */
+.session-title {
+    font-weight: bold;
+    color: black;
+    font-size: 1.5em;
+}

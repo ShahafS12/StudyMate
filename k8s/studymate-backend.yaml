@@ -20,11 +20,22 @@ spec:
     spec:
       containers:
         - name: studymate
-          image: ghcr.io/shahafs12/studymate-app:2.6
+          image: ghcr.io/shahafs12/studymate-app:3.1.2
           imagePullPolicy: Always
 
           ports:
             - containerPort: 8080
+          env:
+            - name: MONGODB_HOST
+              value: "mongodb.default.svc.cluster.local"
+            - name: MONGODB_PORT
+              value: "27017"
+            - name: MONGODB_DATABASE
+              value: "studymate"
+            - name: MONGODB_USERNAME
+              value: "studymate"
+            - name: MONGODB_PASSWORD
+              value: "shaharamitshahaf"
 
      #     volumeMounts:
       #      - name: persistent-storage

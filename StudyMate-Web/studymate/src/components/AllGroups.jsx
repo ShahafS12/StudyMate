@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+// AllGroups.js
+import React, { useEffect, useState } from 'react';
 import { useAuth } from './security/AuthContext';
 import { getGroups } from './api/StudyMateApiService';
 import { Link } from "react-router-dom";
@@ -13,7 +14,7 @@ export default function AllGroups() {
         return data.map(item => JSON.parse(item).groupName);
     };
 
-    useEffect(() => {
+    const fetchGroups = () => {
         getGroups(token)
             .then(response => {
                 const names = parseGroupNames(response);
@@ -22,7 +23,15 @@ export default function AllGroups() {
             .catch(error => {
                 console.error('Failed to fetch groups:', error);
             });
+    };
+
+    useEffect(() => {
+        fetchGroups();
     }, [token]);
+
+    const handleGroupDeleted = () => {
+        fetchGroups(); //
+    };
 
     return (
         <div className="container groups-container">
@@ -48,6 +57,7 @@ export default function AllGroups() {
                                                     <h5 className="card-title">
                                                         <Link to={`/group/${encodeURIComponent(groupName)}`} className="group-link">{groupName}</Link>
                                                     </h5>
+                                                    {/* No delete button here, handled in Group component */}
                                                 </div>
                                             </div>
                                         </div>
