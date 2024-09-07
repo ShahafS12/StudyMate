@@ -78,6 +78,15 @@ public class GroupTest {
         group.addMember(user,user2);
         assertTrue(group.isDeleted()==true);
     }
+    @Test
+        public void testAddExitingUserToGroup() {//
+        User user = new User("JohnDoe", "password123", "john.doe@example.com", "Harvard", "Computer Science", "CS101", "male");
+        User user2 = new User("JohnDoe2", "password123", "john.doe2@example.com", "Harvard", "Computer Science", "CS101", "male");
+        List<User> members =new ArrayList<>();
+        Group group = new Group("testGroup", "testInstitute", "testCurriculum", new Date(), user, members);
+        group.addMember(user,user2);
+        assertTrue(group.isDeleted()==true);
+    }
 
       @Test
     public void testRemovingAllMembers() {//
