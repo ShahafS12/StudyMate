@@ -343,11 +343,26 @@ public class Group {
     }
     public void removeSession(Session session){
         if (sessions.contains(session)){
+            int numberOfParticipants=session.getParticipants().size();
+            for (int i=0;i<numberOfParticipants;i++)
+            {
+                User participant=session.getParticipants().get(0);
+                removeUserFromSession(participant,session);
+            }
             log.info(String.format("removing session %s from group %s ",session.getSessionId(),groupName));
             sessions.remove(session);
         }
         else {
             log.info("session not found in group");
+        }
+    }
+    public void removeUserFromSession(User user, Session session){
+        if (session.getParticipants().contains(user)){
+            log.info(String.format("removing user %s from session %s from group %s ",user.getUserName(),session.getSessionId(),groupName));
+            session.removeParticipant(user);
+        }
+        else {
+            log.info(String.format(" user %s in not in session %s",user.getUserName(),session.getSessionId()));
         }
     }
 }
