@@ -183,7 +183,13 @@ public class GroupService {
                     User userTorRemove = userRepository.findByUserName(userToAddStr);
                     response = UserService.responseInCaseOfUserNotFound(userTorRemove);
                     if (response.getStatusCode() == HttpStatus.OK) {
-                        //TODO first need to delete user from all group sessions and see if they not should  be deleted
+                        for (Session session:group.getSessions())
+                        {
+                            if (session.getParticipants().contains(userTorRemove)){
+                                group.removeUserFromSession(userTorRemove,session);
+                                sessiosRepository.save(session);
+                            }
+                        }
                         group.removeMemberByAdmin(adminCandidate, userTorRemove);
                         groupRepository.save(group);
                         userRepository.save(userTorRemove);
@@ -235,7 +241,13 @@ public class GroupService {
                 if (response.getStatusCode() == HttpStatus.OK) {
                     List<User> groupMembers = new ArrayList<>(group.getMembers());
                     group.removeAllMembersByAdmin(adminCandidate);
-                    //TODO need to delete all group sessions
+                    List<Session> groupSessions=group.getSessions();
+                    int numOfSessions=groupSessions.size();
+                    for (int i=0;i<numOfSessions;i++){
+                        Session session=groupSessions.get(0);
+                        session.cancelMeeting();
+                        sessiosRepository.save(session);
+                    }
                     groupRepository.save(group);
                     for (User user : groupMembers) {
                         userRepository.save(user);
@@ -250,6 +262,7 @@ public class GroupService {
         }
         return response;
     }
+
     public ResponseEntity<List<String>> getGroupsMember(String groupName){
         try {
             Group group = groupRepository.findByGroupName(groupName);
