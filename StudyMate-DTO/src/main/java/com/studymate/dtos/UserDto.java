@@ -8,8 +8,20 @@ public class UserDto {
     private String degree;
     private String curriculum;
     private String gender;
-
-    // Getters and setters for each field
+    private String memberSince;
+    public UserDto() {
+    }
+    public UserDto(String username, String password, String email, String university, String degree, String curriculum, String gender,
+                   String memberSince) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.university = university;
+        this.degree = degree;
+        this.curriculum = curriculum;
+        this.gender = gender;
+        this.memberSince = memberSince;
+    }
     public String getUsername() {
         return username;
     }
@@ -64,5 +76,11 @@ public class UserDto {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+    public String getMemberSince() {
+        return memberSince;
+    }
+    public void setMemberSince(String memberSince) {
+        this.memberSince = memberSince;
     }
 }

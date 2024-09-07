@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.project</groupId>
         <artifactId>StudyMate</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>StudyMate-DTO</artifactId>
     <name>StudyMate-DTO</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <url>http://maven.apache.org</url>
 </project>

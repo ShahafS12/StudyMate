@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.project</groupId>
         <artifactId>StudyMate</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>StudyMate-Apis</artifactId>
@@ -22,10 +22,11 @@
             <artifactId>spring-context</artifactId>
             <version>6.1.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.project</groupId>
             <artifactId>StudyMate-Service</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
@@ -55,4 +56,20 @@
             <version>2.23.1</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.2.6</version> <!-- Use the appropriate Spring Boot version -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

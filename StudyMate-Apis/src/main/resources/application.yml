@@ -1,5 +1,13 @@
 spring:
     data:
         mongodb:
-            uri: mongodb://localhost:27017/studyMate
-            database: studyMate
+            host: ${MONGODB_HOST:localhost}
+            port: ${MONGODB_PORT:27017}
+            database: ${MONGODB_DATABASE:studymate}
+            username: ${MONGODB_USERNAME:studymate}
+            password: ${MONGODB_PASSWORD:shaharamitshahaf}
+
+
+jwt:
+    secret: "044561dc31ea927d424cf34c400e6c2433e6488aaa797f37a8a2a33c50303d91"
+    expiration: 86400000

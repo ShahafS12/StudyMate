@@ -1,12 +1,16 @@
 import axios from "axios";
 
-const STUDYMATE_API_BASE_URL = 'http://localhost:8080/v1';
+const STUDYMATE_API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/';
 
 const apiClient= axios.create(
     {
         baseURL: STUDYMATE_API_BASE_URL
     }
 )
+
+export const getErrorCode = async () => {
+    await apiClient.get(`/errorCode`);
+}
 
 export const registerUser = async (username, password, email, university, degree, curriculum, gender) => {
     try {
@@ -24,7 +28,7 @@ export const registerUser = async (username, password, email, university, degree
 export const loginUser = async (username, password) => {
     try {
         const userData = { username, password };
-        const response = await apiClient.post(`/users/login`, JSON.stringify(userData),
+        const response = await apiClient.post(`/auth/login`, JSON.stringify(userData),
             {headers: { 'Content-Type': 'application/json' }
             });
         return response.data;
@@ -33,3 +37,273 @@ export const loginUser = async (username, password) => {
         throw error;
     }
 }
+
+export const getUser = async (username, token) => {
+    try {
+        const response = await apiClient.get(`users/getUser/${username}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Get user error:', error);
+        throw error;
+    }
+}
+
+export const getGroupsForUser = async (username, token) => {
+    try {
+        const response = await apiClient.get(`users/getUserGroups/${username}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Get groups error:', error);
+        throw error;
+    }
+}
+
+export const getSessionsForUser = async (token, username) => {
+    try {
+        const response = await apiClient.get(`users/getUserSessions/${username}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get sessions error:', error);
+        throw error;
+    }
+}
+
+export const getUserNotifications = async (username, token) => {
+    try {
+        const response = await apiClient.get(`users/getUserNotifications/${username}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get notifications error:', error);
+        throw error;
+    }
+}
+
+export const getGroups = async (token) => {
+    try {
+        const response = await apiClient.get(`group/allGroupNames`, {
+            headers: {
+          //      'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get groups error:', error);
+        throw error;
+    }
+}
+
+export const createGroup = async (group, token) => {
+    try {
+        const response = await apiClient.post(`group/createGroup`, JSON.stringify(group), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Create group error:', error);
+        throw error;
+    }
+}
+
+export const getGroupByName = async (name) => {
+    try {
+        const decodedName = decodeURIComponent(name);
+        const response = await apiClient.get(`group/getGroup/${decodedName}`);
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get group by name' + name, error);
+        throw error;
+    }
+}
+
+
+export const createSession = async (session, token) => {
+    try {
+        const response = await apiClient.post('/session/createSession', session, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Create session error:', error);
+        throw error;
+    }
+}
+
+
+export const isUserMemberInGroup = async (userName, groupName) => {
+    let isMember = false;
+    try {
+        const response = await apiClient.get(`users/isInGroup/${userName}/${groupName}`);
+        isMember = response.data;
+    }
+    catch (error){
+        console.error('');
+        throw error;
+    }
+    finally {
+        return isMember;
+    }
+}
+
+export const getSessionsForGroup = async (groupName) => {
+    try {
+        const response = await apiClient.get(`group/getGroupSessions/${groupName}`, {});
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get sessions error:', error);
+        throw error;
+    }
+}
+
+export const exitSession = async (token, sessionId) => {
+    try {
+        const response = await apiClient.post(`session/removeMyselfFromSession/${sessionId}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get sessions error:', error);
+        throw error;
+    }
+}
+
+export const joinSession = async (token, sessionId) => {
+    try {
+        const response = await apiClient.post(`session/addMyselfToSession/${sessionId}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get sessions error:', error);
+        throw error;
+    }
+}
+
+export const deleteSession = async (token, sessionId) => {
+    try {
+        const response = await apiClient.post(`session/deleteSessionByAdmin/${sessionId}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        console.error('Delete sessions error:', error);
+        throw error;
+    }
+}
+
+export const joinGroup = async (token, groupName, userName) => {
+    try {
+        const response = await apiClient.post(
+            `group/addUserToGroup/${groupName}/${userName}`,
+            {}, // An empty body if your endpoint doesn't expect a request payload
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error joining group:', error);
+        throw error;
+    }
+};
+
+export const exitGroup = async (token, groupName, userName) => {
+    try {
+        const response = await apiClient.post(
+            `group/removeUserFromGroup/${groupName}/${userName}`,
+            {}, // An empty body if your endpoint doesn't expect a request payload
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error exiting group:', error);
+        throw error;
+    }
+};
+
+export const deleteGroup = async (token, groupName) => {
+    try {
+        const response = await apiClient.post(
+            `group/deleteGroupByAdmin/${groupName}`,
+            {}, // An empty body if your endpoint doesn't expect a request payload
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting group:', error);
+        throw error;
+    }
+};
+
+
+export const search = async (queryWord) => {
+    try {
+        const response = await apiClient.get(`/search?query=${queryWord}`);
+        return response.data;
+    }
+    catch (error) {
+        console.error('Get sessions error:', error);
+        throw error;
+    }
+}
+
+export const validateToken = async (token) => {
+    try {
+        const response = await apiClient.get('/auth/validate', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        // Server returns plain text, so check for "Valid token"
+        return response.data === "Valid token";
+    } catch (error) {
+        console.error('Token validation failed:', error);
+        return false;
+    }
+};
