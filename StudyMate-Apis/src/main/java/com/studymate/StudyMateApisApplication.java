@@ -19,7 +19,7 @@ public class StudyMateApisApplication
             @Override
             public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000") // Replace with your frontend URL
+                        .allowedOrigins("http://localhost:3000", "http://51.4.3.98/", "http://51.4.3.98:3000/") // Replace with your frontend URL
                         .allowedMethods("*")
                         .allowCredentials(true);
             }

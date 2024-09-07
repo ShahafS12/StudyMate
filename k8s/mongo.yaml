@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongodb
+  labels:
+    app: mongodb
 spec:
   replicas: 1
   selector:
@@ -19,9 +21,38 @@ spec:
             - containerPort: 27017
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
-              value: <your_root_username>
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: username
             - name: MONGO_INITDB_ROOT_PASSWORD
-              value: <your_root_password>
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: password
+          volumeMounts:
+            - name: mongodb-storage
+              mountPath: /data/db
+            - name: mongo-config
+              mountPath: /docker-entrypoint-initdb.d/
+      volumes:
+        - name: mongodb-storage
+          persistentVolumeClaim:
+            claimName: studymate-pvc
+        - name: mongo-config
+          configMap:
+            name: mongo-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: studymate-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
@@ -35,3 +66,16 @@ spec:
       port: 27017
       targetPort: 27017
   type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config
+data:
+  mongo-init.js: |
+    var db = db.getSiblingDB('studymate');
+    try {
+        db.auth('studymate', 'shaharamitshahaf');
+    } catch (error) {
+        db.createUser({user: "studymate", pwd: "shaharamitshahaf", roles: ["readWrite"]});
+    }

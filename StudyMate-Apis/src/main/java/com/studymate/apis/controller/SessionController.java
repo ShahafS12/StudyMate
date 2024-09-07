@@ -68,7 +68,7 @@ public class SessionController {
 
     @PostMapping(URLMappingConstants.USER_ADD_HIMSELF_TO_SESSION)
     @ResponseBody
-    public ResponseEntity<String> userAddHimselfToSession(@RequestHeader("Authorization") String token, @PathVariable String id) {
+    public ResponseEntity<String> userAddHimselfToSession(@RequestHeader("Authorization") String token, @PathVariable("sessionId") String id) {
         if (authenticationService.validateToken(token)) {
             log.info("user added himself to session");
             return sessionService.UserAddHimselfToSession(id, authenticationService.getUsernameFromToken(token));

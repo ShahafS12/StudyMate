@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.project</groupId>
         <artifactId>StudyMate</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>StudyMate-Service</artifactId>
     <name>StudyMate-Service</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
 
@@ -19,13 +19,13 @@
         <dependency>
             <groupId>org.project</groupId>
             <artifactId>StudyMate-DB</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.project</groupId>
             <artifactId>StudyMate-DTO</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
 
         <dependency>

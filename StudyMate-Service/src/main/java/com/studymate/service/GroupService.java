@@ -47,8 +47,7 @@ public class GroupService {
         {
               response= ResponseEntity.badRequest().body("curriculum is null");
         }
-        else if(groupRepository.findByGroupName(groupName)!= null) {
-            String errorMsg = "Group name already exists";
+        else if(groupRepository.findByGroupName(groupName)!= null && !groupRepository.findByGroupName(groupName).isDeleted()) {            String errorMsg = "Group name already exists";
             log.error(errorMsg);
             response= ResponseEntity.badRequest().body(errorMsg);
         }
